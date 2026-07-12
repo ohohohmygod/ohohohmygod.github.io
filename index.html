@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cat Food Match — Personalized cat food recommendations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#faf9f7;color:#2d2d2d;min-height:100vh;line-height:1.5}
+.nav{display:flex;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:0;z-index:10}
+.nav a{flex:1;text-align:center;padding:14px 6px;font-size:13px;font-weight:500;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;text-decoration:none}
+.nav a:hover{color:#4a7c59;background:#f7faf5}
+.nav a.active{color:#4a7c59;border-bottom-color:#4a7c59;font-weight:600}
+.container{max-width:760px;margin:0 auto;padding:20px}
+.panel{display:none}
+.panel.active{display:block}
+/* Landing hero */
+.hero{text-align:center;padding:40px 20px;background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-radius:18px;margin-bottom:28px}
+.hero h1{font-size:26px;color:#2e5a3b;margin-bottom:12px;font-weight:700}
+.hero p{font-size:15px;color:#5a7d5f;max-width:500px;margin:0 auto 20px}
+.hero .price{font-size:36px;color:#4a7c59;font-weight:800;margin:14px 0}
+.hero .price span{font-size:14px;color:#888;font-weight:400}
+.cta-btn{display:inline-block;padding:16px 44px;background:linear-gradient(135deg,#4a7c59,#3a6347);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .1s,box-shadow .2s;box-shadow:0 4px 18px rgba(74,124,89,.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(74,124,89,.4)}
+/* Cards */
+.card{background:#fff;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 1px 8px rgba(0,0,0,.04);border:1px solid #eef2ee}
+.card h2{font-size:17px;color:#4a7c59;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #e8f5e9}
+.card h3{font-size:14px;color:#444;margin:16px 0 8px;font-weight:600}
+.benefits{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.benefit{background:#f7faf5;padding:14px;border-radius:10px;text-align:center}
+.benefit strong{display:block;color:#4a7c59;font-size:15px;margin-bottom:4px}
+.benefit span{font-size:12px;color:#777}
+/* Form */
+label{display:block;font-size:13px;margin-bottom:4px;color:#444;font-weight:500}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid #dce5dc;border-radius:10px;font-size:14px;color:#2d2d2d;background:#fdfefd;margin-bottom:10px;transition:border .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#4a7c59;background:#fff}
+textarea{resize:vertical;min-height:60px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.chk-grid label{display:flex;align-items:center;gap:6px;font-weight:400;font-size:12px;margin:0;cursor:pointer}
+.chk-grid input[type=checkbox]{width:auto;margin:0}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#4a7c59,#3a6347);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,124,89,.25)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{background:#ccc;cursor:not-allowed;box-shadow:none;transform:none}
+.btn-sm{padding:8px 16px;font-size:12px;width:auto;display:inline-block}
+/* Table */
+table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+th{background:#f0f7f0;color:#4a7c59;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #c8e0c8}
+td{padding:8px 10px;border-bottom:1px solid #e8f0e8}
+tr:hover td{background:#f9fcf9}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.badge-paid{background:#e8f5e9;color:#2e7d32}
+.badge-pending{background:#fff3e0;color:#e65100}
+.badge-unpaid{background:#fce4ec;color:#c62828}
+/* KB */
+.kb-filter{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.kb-filter select{padding:7px 12px;font-size:12px;width:auto;margin:0;border:1.5px solid #dce5dc;border-radius:8px}
+.kb-filter input{padding:7px 12px;font-size:12px;width:180px;margin:0}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.stat{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.03);border:1px solid #eef2ee}
+.stat .num{font-size:26px;font-weight:800;color:#4a7c59}
+.stat .lbl{font-size:11px;color:#999;margin-top:4px}
+/* Loading */
+.loading{text-align:center;padding:30px;color:#999}
+/* KB card */
+.kb-card{background:#fff;border:1px solid #eef2ee;border-radius:12px;padding:16px;margin-bottom:10px}
+.kb-card .brand-name{font-size:16px;font-weight:700;color:#2d2d2d}
+.kb-card .brand-origin{font-size:11px;color:#4a7c59;font-weight:500}
+.kb-card .brand-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px;color:#666}
+.kb-card .brand-detail span{background:#f7faf5;padding:4px 8px;border-radius:6px;text-align:center}
+.kb-card .brand-price{font-size:13px;color:#e65100;font-weight:600;margin-top:8px}
+.kb-card .brand-note{font-size:11px;color:#999;margin-top:4px;font-style:italic}
+/* payment section */
+.payment-section{border:2px dashed #c8e0c8;border-radius:14px;padding:20px;text-align:center;margin-top:16px}
+.payment-section h3{color:#4a7c59;margin-bottom:8px}
+.tier-option{display:inline-block;border:2px solid #dce5dc;border-radius:12px;padding:14px 18px;margin:6px;cursor:pointer;text-align:left;min-width:160px;transition:all .2s}
+.tier-option:hover{border-color:#4a7c59;background:#f7faf5}
+.tier-option.selected{border-color:#4a7c59;background:#e8f5e9}
+.tier-option .tier-name{font-size:16px;font-weight:700;color:#2d2d2d}
+.tier-option .tier-price{font-size:20px;font-weight:800;color:#4a7c59;margin:4px 0}
+.tier-option .tier-desc{font-size:11px;color:#888}
+.footer{text-align:center;padding:30px;color:#bbb;font-size:12px}
+.footer a{color:#4a7c59}
+.notice{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px;font-size:12px;color:#8d6e00;margin:10px 0}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <a class="tab active" onclick="switchTab('home')">🐱 Home</a>
+  <a class="tab" onclick="switchTab('quiz')">Quiz</a>
+  <a class="tab" onclick="switchTab('kb')">Food DB</a>
+  <a class="tab" onclick="switchTab('orders')">Orders</a>
+</div>
+
+<div class="container">
+
+<!-- HOME PANEL -->
+<div id="panel-home" class="panel active">
+  <div class="hero">
+    <h1>Stop guessing what to feed your cat</h1>
+    <p>Get a personalized cat food recommendation based on YOUR cat's age, health, and budget — not marketing hype. Backed by nutrition data from 20+ top US brands.</p>
+    <div class="price">$19 <span>/ per report</span></div>
+    <a class="cta-btn" onclick="switchTab('quiz')">Get My Cat's Match →</a>
+  </div>
+
+  <div class="card">
+    <h2>How It Works</h2>
+    <div class="benefits">
+      <div class="benefit"><strong>1. Answer 12 Questions</strong><span>About your cat's profile, diet, health, and budget</span></div>
+      <div class="benefit"><strong>2. We Analyze</strong><span>Cross-reference 50+ nutrition metrics across brands</span></div>
+      <div class="benefit"><strong>3. Get Your Report</strong><span>3 personalized picks with transition guide</span></div>
+      <div class="benefit"><strong>4. Feed Confidently</strong><span>Know exactly what's in the bowl and why</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Why pay for this?</h2>
+    <p style="font-size:13px;color:#555;line-height:1.8">
+      Because 63% of pet owners find food labels misleading. Because "grain-free" doesn't always mean healthy. Because your cat isn't a Reddit thread — she has specific needs that generic "Top 10 Best Cat Foods" lists can't address.<br><br>
+      We don't sell cat food. We don't take brand commissions. We just give you an honest, data-backed answer to the question: <em>"What should I feed MY cat?"</em>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>What You Get</h2>
+    <div class="benefits">
+      <div class="benefit"><strong>3 Brand Picks</strong><span>Premium, mid-range & budget tiers</span></div>
+      <div class="benefit"><strong>Monthly Cost Calc</strong><span>Know your real monthly spend</span></div>
+      <div class="benefit"><strong>7-Day Switch Plan</strong><span>Safely transition to new food</span></div>
+      <div class="benefit"><strong>Health Notes</strong><span>Why we picked (or avoided) each brand</span></div>
+    </div>
+  </div>
+  <div class="footer">Cat Food Match · Not veterinary advice · Consult your vet for medical concerns<br><a href="#terms">Terms</a> · <a href="#privacy">Privacy</a> · <a href="#refunds">Refunds</a> · <a href="mailto:support@catfoodmatch.co">Contact</a></div>
+</div>
+
+<!-- TERMS PANEL -->
+<div id="panel-terms" class="panel">
+  <div class="card">
+    <h2>Terms of Service</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:16px">Last updated: July 12, 2026</p>
+    <div style="font-size:13px;color:#555;line-height:1.9">
+      <p><strong>1. Acceptance of Terms</strong><br>By accessing and using Cat Food Match ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the Service.</p>
+      <p><strong>2. Service Description</strong><br>Cat Food Match provides personalized cat food recommendations in the form of digital reports. Customers complete a questionnaire about their cat, and we generate a custom recommendation report delivered via email.</p>
+      <p><strong>3. No Veterinary Advice</strong><br>The Service provides nutritional guidance only. It is NOT a substitute for professional veterinary advice, diagnosis, or treatment. Always consult a licensed veterinarian for medical concerns regarding your cat.</p>
+      <p><strong>4. Payment and Pricing</strong><br>All prices are listed in USD. Payment is processed securely through Paddle. By completing a purchase, you authorize us to charge the displayed amount. Prices are subject to change with notice.</p>
+      <p><strong>5. Intellectual Property</strong><br>All content, including reports, recommendations, and website materials, is the intellectual property of Cat Food Match. Reports are for personal use only and may not be resold or redistributed.</p>
+      <p><strong>6. Limitation of Liability</strong><br>Cat Food Match is not liable for any adverse reactions, health issues, or damages resulting from the use of recommended products. The customer assumes all responsibility for feeding decisions.</p>
+      <p><strong>7. Contact</strong><br>For questions about these terms, contact us at support@catfoodmatch.co.</p>
+    </div>
+  </div>
+  <div class="footer"><a href="#" onclick="switchTab('home')">← Back to Home</a></div>
+</div>
+
+<!-- PRIVACY PANEL -->
+<div id="panel-privacy" class="panel">
+  <div class="card">
+    <h2>Privacy Policy</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:16px">Last updated: July 12, 2026</p>
+    <div style="font-size:13px;color:#555;line-height:1.9">
+      <p><strong>1. Information We Collect</strong><br>We collect information you voluntarily provide when filling out the cat food questionnaire, including: your cat's name, age, breed, weight, health conditions, dietary preferences, your email address, and budget preferences.</p>
+      <p><strong>2. How We Use Information</strong><br>Your information is used solely to generate your personalized cat food recommendation report and deliver it to you via email. We do not use your data for any other purpose.</p>
+      <p><strong>3. Data Storage</strong><br>Order data is stored locally in your browser (localStorage) for order tracking purposes. Payment information is processed entirely by Paddle and is never stored on our servers.</p>
+      <p><strong>4. Third-Party Services</strong><br>We use Paddle for payment processing. Paddle's privacy policy governs the handling of your payment information. We do not share your personal data with any other third parties.</p>
+      <p><strong>5. Cookies</strong><br>We do not use tracking cookies. The only data stored in your browser is your order history for your convenience.</p>
+      <p><strong>6. Your Rights</strong><br>You may request deletion of your data at any time by contacting us at support@catfoodmatch.co.</p>
+      <p><strong>7. Contact</strong><br>For privacy-related inquiries, email support@catfoodmatch.co.</p>
+    </div>
+  </div>
+  <div class="footer"><a href="#" onclick="switchTab('home')">← Back to Home</a></div>
+</div>
+
+<!-- REFUNDS PANEL -->
+<div id="panel-refunds" class="panel">
+  <div class="card">
+    <h2>Refund Policy</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:16px">Last updated: July 12, 2026</p>
+    <div style="font-size:13px;color:#555;line-height:1.9">
+      <p><strong>1. Digital Product Policy</strong><br>Cat Food Match sells digital reports delivered via email. Due to the nature of digital products, we generally do not offer refunds once a report has been delivered.</p>
+      <p><strong>2. When Refunds Apply</strong><br>We will issue a full refund in the following cases:<br>- You were charged but did not receive your report within 48 hours of payment.<br>- The report contains factual errors regarding the recommended cat food brands (e.g., incorrect nutrition data).<br>- Duplicate charges for the same order.</p>
+      <p><strong>3. How to Request a Refund</strong><br>Email support@catfoodmatch.co with your order ID and a brief explanation. We respond to all refund requests within 48 hours.</p>
+      <p><strong>4. Report Quality Guarantee</strong><br>If you are unsatisfied with your report, contact us. We will review your case and may offer a revised report or partial refund at our discretion.</p>
+    </div>
+  </div>
+  <div class="footer"><a href="#" onclick="switchTab('home')">← Back to Home</a></div>
+</div>
+
+<!-- QUIZ PANEL -->
+<div id="panel-quiz" class="panel">
+  <div class="card">
+    <h2>🐱 Tell Us About Your Cat</h2>
+    <p style="font-size:12px;color:#999;margin-bottom:14px">12 questions. 3 minutes. We'll do the rest.</p>
+
+    <h3>Basic Info</h3>
+    <label>Cat's Name</label>
+    <input type="text" id="catName" placeholder="e.g. Luna, Oliver">
+
+    <div class="row">
+      <div><label>Age</label><input type="text" id="catAge" placeholder="e.g. 8 months, 3 years"></div>
+      <div><label>Weight</label><input type="text" id="catWeight" placeholder="e.g. 4.2 kg, 9.3 lbs"></div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Breed</label>
+        <select id="catBreed">
+          <option value="">Select...</option>
+          <option>Domestic Shorthair</option><option>Domestic Longhair</option>
+          <option>Siamese</option><option>Maine Coon</option><option>Persian</option>
+          <option>Bengal</option><option>Ragdoll</option><option>British Shorthair</option>
+          <option>Sphynx</option><option>Other / Mixed</option>
+        </select>
+      </div>
+      <div>
+        <label>Spayed / Neutered?</label>
+        <select id="catFixed"><option value="">Select...</option><option>Yes</option><option>No</option></select>
+      </div>
+    </div>
+
+    <h3>Current Diet</h3>
+    <label>What are you currently feeding?</label>
+    <input type="text" id="currentFood" placeholder="Brand and product name, e.g. Purina Pro Plan Chicken">
+
+    <label>Food type</label>
+    <select id="foodType"><option value="">Select...</option><option>Dry (kibble)</option><option>Wet (canned)</option><option>Both dry + wet</option><option>Raw / homemade</option><option>Not sure</option></select>
+
+    <label>How often does your cat eat?</label>
+    <select id="feedingFreq"><option value="">Select...</option><option>Free feeding (always available)</option><option>2 meals/day</option><option>3+ meals/day</option><option>Once a day</option></select>
+
+    <h3>Health & Preferences</h3>
+    <label>Any health concerns? <span style="font-weight:400;color:#999">(check all that apply)</span></label>
+    <div class="chk-grid">
+      <label><input type="checkbox" value="overweight"> Overweight</label>
+      <label><input type="checkbox" value="underweight"> Underweight</label>
+      <label><input type="checkbox" value="digestive"> Digestive issues / soft stool</label>
+      <label><input type="checkbox" value="urinary"> Urinary / kidney concerns</label>
+      <label><input type="checkbox" value="allergies"> Food allergies / sensitivities</label>
+      <label><input type="checkbox" value="dental"> Dental problems</label>
+      <label><input type="checkbox" value="hairball"> Frequent hairballs</label>
+      <label><input type="checkbox" value="pickyeater"> Picky eater</label>
+      <label><input type="checkbox" value="none_health"> None — healthy cat!</label>
+    </div>
+
+    <label>Anything else we should know?</label>
+    <textarea id="extraNotes" placeholder="e.g. Vet recommended grain-free, hates fish flavors, needs to gain weight..."></textarea>
+
+    <h3>Your Budget</h3>
+    <label>Monthly cat food budget</label>
+    <select id="budget"><option value="">Select...</option><option>$15-25/month (budget-friendly)</option><option>$25-40/month (mid-range)</option><option>$40-60/month (premium)</option><option>$60+/month (no limit — best quality)</option></select>
+
+    <h3>Your Email</h3>
+    <label>Where should we send your report?</label>
+    <input type="email" id="email" placeholder="you@email.com">
+
+    <div class="notice">⚠️ <strong>Not medical advice.</strong> We provide nutrition guidance based on your cat's profile. For medical conditions, consult your veterinarian.</div>
+
+    <button class="btn" onclick="submitQuiz()">Submit & Continue to Payment →</button>
+  </div>
+</div>
+
+<!-- PAYMENT PANEL (shown inline after submit) -->
+<div id="panel-payment" class="panel">
+  <div class="card">
+    <h2>Choose Your Report</h2>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:16px 0">
+      <div class="tier-option selected" id="tier-basic" onclick="selectTier('basic')">
+        <div class="tier-name">Basic Report</div>
+        <div class="tier-price">$19</div>
+        <div class="tier-desc">3 brand picks<br>Monthly cost calc<br>7-day switch guide</div>
+      </div>
+      <div class="tier-option" id="tier-pro" onclick="selectTier('pro')">
+        <div class="tier-name">Pro Report</div>
+        <div class="tier-price">$29</div>
+        <div class="tier-desc">Everything in Basic<br>+ 1-on-1 chat review<br>+ Life-stage feeding roadmap</div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#888">Order #<span id="orderIdDisplay">---</span></p>
+    <button class="btn" id="payBtn" onclick="processPayment()">Pay with Card →</button>
+    <p style="text-align:center;font-size:11px;color:#bbb;margin-top:10px">Secure payment · Report delivered within 24 hours</p>
+  </div>
+</div>
+
+<!-- KB PANEL -->
+<div id="panel-kb" class="panel">
+  <div class="card">
+    <h2>📚 Cat Food Knowledge Base</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">20+ US brands with nutrition data and pricing. For reference only.</p>
+    <div class="kb-filter">
+      <select id="kbTier" onchange="renderKB()"><option value="">All Tiers</option><option>Premium</option><option>Mid-Range</option><option>Budget</option></select>
+      <select id="kbLifeStage" onchange="renderKB()"><option value="">All Life Stages</option><option>Kitten</option><option>Adult</option><option>Senior</option><option>All Life Stages</option></select>
+      <select id="kbSpecial" onchange="renderKB()"><option value="">All Needs</option><option>digestive</option><option>urinary</option><option>weight</option><option>allergy</option><option>hairball</option><option>dental</option><option>grain_free</option></select>
+      <input type="text" id="kbSearch" placeholder="Search brand..." oninput="renderKB()">
+    </div>
+    <div id="kbResults"><div class="loading">Loading cat food data...</div></div>
+  </div>
+</div>
+
+<!-- ORDERS PANEL -->
+<div id="panel-orders" class="panel">
+  <div class="stats">
+    <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Total Orders</div></div>
+    <div class="stat"><div class="num" id="statRevenue">$0</div><div class="lbl">Total Revenue</div></div>
+    <div class="stat"><div class="num" id="statPending">0</div><div class="lbl">Pending</div></div>
+  </div>
+  <div class="card">
+    <h2>📋 Orders</h2>
+    <div id="orderList"><p style="color:#999;text-align:center;padding:20px">No orders yet. Complete a quiz to get started!</p></div>
+  </div>
+</div>
+
+</div><!-- container -->
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+// ===== CAT FOOD DATABASE =====
+const catFoodDB = [
+  // Premium Tier
+  {id:1,name:"Orijen Original Cat",origin:"Canada",tier:"Premium",protein:40,fat:20,carb_est:18,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"All Life Stages",special:["grain_free","high_protein"],price_range:"$35-50/month",price_monthly:42,rating:4.8,notes:"Biologically appropriate. 85% animal ingredients. High protein density."},
+  {id:2,name:"Acana Meadowlands",origin:"Canada",tier:"Premium",protein:35,fat:20,carb_est:22,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"All Life Stages",special:["grain_free"],price_range:"$30-45/month",price_monthly:38,rating:4.6,notes:"Slightly lower protein than Orijen. Good for cats transitioning from kibble."},
+  {id:3,name:"Ziwi Peak Air-Dried Chicken",origin:"New Zealand",tier:"Premium",protein:38,fat:30,carb_est:8,grain_free:true,main_protein:"Chicken, Chicken Organs",life_stage:"All Life Stages",special:["grain_free","high_protein","digestive"],price_range:"$45-60/month",price_monthly:52,rating:4.9,notes:"Air-dried raw. 96% meat/organ/bone. Ethically sourced. Very low carb."},
+  {id:4,name:"Instinct Raw Boost Grain-Free",origin:"USA",tier:"Premium",protein:42,fat:22,carb_est:16,grain_free:true,main_protein:"Chicken, Turkey, Menhaden Fish",life_stage:"Adult",special:["grain_free","high_protein","digestive"],price_range:"$35-50/month",price_monthly:40,rating:4.7,notes:"Freeze-dried raw pieces mixed in. Probiotics included. Great for picky eaters."},
+  {id:5,name:"Tiki Cat Born Carnivore",origin:"USA",tier:"Premium",protein:43,fat:18,carb_est:15,grain_free:true,main_protein:"Chicken, Chicken Meal, Herring",life_stage:"Adult",special:["grain_free","high_protein","weight"],price_range:"$28-40/month",price_monthly:34,rating:4.5,notes:"Very high protein. Baked kibble. Good for active cats."},
+  {id:6,name:"Wellness CORE Original",origin:"USA",tier:"Premium",protein:38,fat:18,carb_est:20,grain_free:true,main_protein:"Turkey, Chicken, Turkey Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$25-38/month",price_monthly:30,rating:4.5,notes:"Solid premium choice. Widely available. Good protein-to-fat ratio."},
+  // Mid-Range Tier
+  {id:7,name:"Blue Buffalo Wilderness Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:22,grain_free:true,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$22-35/month",price_monthly:28,rating:4.3,notes:"LifeSource Bits for antioxidants. Some cats pick out the bits. Popular choice."},
+  {id:8,name:"Merrick Purrfect Bistro",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:24,grain_free:true,main_protein:"Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["grain_free","hairball"],price_range:"$20-32/month",price_monthly:25,rating:4.2,notes:"Deboned chicken first ingredient. Good for hairball control."},
+  {id:9,name:"Nutro Wholesome Essentials",origin:"USA",tier:"Mid-Range",protein:33,fat:16,carb_est:28,grain_free:false,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["digestive"],price_range:"$18-28/month",price_monthly:22,rating:4.1,notes:"Non-GMO ingredients. Good for sensitive stomachs. Contains rice."},
+  {id:10,name:"Purina Pro Plan Savor",origin:"USA",tier:"Mid-Range",protein:36,fat:17,carb_est:24,grain_free:false,main_protein:"Chicken, Rice, Poultry By-Product Meal",life_stage:"Adult",special:["digestive","weight"],price_range:"$18-28/month",price_monthly:22,rating:4.4,notes:"Vet-recommended. Live probiotics. Reliable quality control. Widely available."},
+  {id:11,name:"Hill's Science Diet Adult Indoor",origin:"USA",tier:"Mid-Range",protein:29,fat:14,carb_est:32,grain_free:false,main_protein:"Chicken, Whole Grain Wheat",life_stage:"Adult",special:["weight","hairball","digestive"],price_range:"$20-30/month",price_monthly:24,rating:4.3,notes:"Vet #1 recommended. Indoor formula. Natural fiber for hairball control."},
+  {id:12,name:"Royal Canin Indoor Adult",origin:"France",tier:"Mid-Range",protein:27,fat:13,carb_est:35,grain_free:false,main_protein:"Chicken Meal, Rice, Corn",life_stage:"Adult",special:["weight","digestive","hairball"],price_range:"$22-32/month",price_monthly:26,rating:4.2,notes:"Breed-specific formulas available. Good stool odor reduction. Highly palatable."},
+  {id:13,name:"Iams ProActive Health Adult",origin:"USA",tier:"Mid-Range",protein:32,fat:15,carb_est:30,grain_free:false,main_protein:"Chicken, Chicken By-Product Meal",life_stage:"Adult",special:["weight","hairball"],price_range:"$12-20/month",price_monthly:15,rating:4.0,notes:"Good value. L-carnitine for weight. Prebiotics for digestion."},
+  {id:14,name:"Rachael Ray Nutrish Indoor",origin:"USA",tier:"Mid-Range",protein:30,fat:14,carb_est:32,grain_free:false,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["weight"],price_range:"$14-22/month",price_monthly:17,rating:3.9,notes:"No poultry by-product meal. Added vitamins & minerals. Simple ingredient list."},
+  // Budget Tier
+  {id:15,name:"Purina ONE Tender Selects",origin:"USA",tier:"Budget",protein:34,fat:13,carb_est:30,grain_free:false,main_protein:"Chicken, Rice Flour, Corn Gluten Meal",life_stage:"Adult",special:[],price_range:"$10-16/month",price_monthly:12,rating:4.1,notes:"Good budget option. Real chicken #1. No fillers. Widely available."},
+  {id:16,name:"Fancy Feast Dry",origin:"USA",tier:"Budget",protein:32,fat:12,carb_est:33,grain_free:false,main_protein:"Chicken, Poultry By-Product Meal",life_stage:"Adult",special:[],price_range:"$8-14/month",price_monthly:10,rating:3.7,notes:"Budget-friendly. Widely available. Cats generally like the taste."},
+  {id:17,name:"9Lives Daily Essentials",origin:"USA",tier:"Budget",protein:28,fat:9,carb_est:38,grain_free:false,main_protein:"Chicken By-Product Meal, Ground Corn",life_stage:"Adult",special:[],price_range:"$6-10/month",price_monthly:8,rating:3.3,notes:"Very budget. taurine fortified. Better than generic store brands."},
+  {id:18,name:"Meow Mix Original Choice",origin:"USA",tier:"Budget",protein:31,fat:11,carb_est:36,grain_free:false,main_protein:"Chicken By-Product Meal, Ground Corn",life_stage:"Adult",special:[],price_range:"$5-9/month",price_monthly:7,rating:3.2,notes:"Most affordable. Cats like taste. Contains food dyes. Basic nutrition."},
+  // Specialty
+  {id:19,name:"Hill's Prescription Diet c/d",origin:"USA",tier:"Premium",protein:30,fat:18,carb_est:30,grain_free:false,main_protein:"Chicken, Pork Liver",life_stage:"Adult",special:["urinary"],price_range:"$45-60/month",price_monthly:50,rating:4.6,notes:"Veterinary diet. For urinary health. Requires vet authorization."},
+  {id:20,name:"Purina Pro Plan Veterinary UR",origin:"USA",tier:"Premium",protein:33,fat:16,carb_est:28,grain_free:false,main_protein:"Chicken, Rice",life_stage:"Adult",special:["urinary"],price_range:"$40-55/month",price_monthly:45,rating:4.5,notes:"Prescription. Urinary tract health. Requires vet authorization."},
+  {id:21,name:"Weruva Cats in the Kitchen (Wet)",origin:"USA",tier:"Premium",protein:55,fat:20,carb_est:8,grain_free:true,main_protein:"Chicken, Pumpkin",life_stage:"Adult",special:["grain_free","digestive","weight","urinary"],price_range:"$40-60/month",price_monthly:48,rating:4.7,notes:"High moisture (78%). Human-grade ingredients. Great for urinary health."},
+  {id:22,name:"Tiki Cat Aloha Friends (Wet)",origin:"USA",tier:"Premium",protein:50,fat:22,carb_est:10,grain_free:true,main_protein:"Chicken, Pumpkin",life_stage:"Adult",special:["grain_free","digestive"],price_range:"$35-50/month",price_monthly:42,rating:4.6,notes:"High moisture. Pumpkin for digestion. Good variety of proteins."}
+];
+
+// ===== STATE =====
+let selectedTier = 'basic';
+let currentOrder = null;
+let orders = JSON.parse(localStorage.getItem('cfm_orders') || '[]');
+let orderIdCounter = parseInt(localStorage.getItem('cfm_counter') || '0');
+
+// ===== PADDLE INIT =====
+// Replace with your Paddle client-side token after account setup
+const PADDLE_TOKEN = 'test_xxxxxxxxxxxx'; // TODO: replace with real token
+let paddleInitialized = false;
+
+function initPaddle() {
+  if (typeof Paddle !== 'undefined') {
+    Paddle.Environment.set('sandbox'); // Change to 'production' for live
+    Paddle.Initialize({token: PADDLE_TOKEN, debug: true});
+    paddleInitialized = true;
+    console.log('Paddle initialized (sandbox)');
+  } else {
+    console.warn('Paddle SDK not loaded');
+  }
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  
+  const tabMap = {home:'panel-home', quiz:'panel-quiz', kb:'panel-kb', orders:'panel-orders', terms:'panel-terms', privacy:'panel-privacy', refunds:'panel-refunds'};
+  const el = document.getElementById(tabMap[tab]);
+  if (el) el.classList.add('active');
+  
+  document.querySelectorAll('.tab').forEach(t => {
+    if (t.textContent.toLowerCase().includes(tab)) t.classList.add('active');
+  });
+  
+  if (tab === 'kb') renderKB();
+  if (tab === 'orders') renderOrders();
+  if (tab === 'home') window.scrollTo({top:0,behavior:'smooth'});
+  // Update URL hash for policy pages
+  if (['terms','privacy','refunds'].includes(tab)) {
+    window.location.hash = tab;
+  } else if (tab === 'home') {
+    window.location.hash = '';
+  }
+}
+
+// ===== QUIZ SUBMISSION =====
+function submitQuiz() {
+  const catName = document.getElementById('catName').value.trim();
+  const catAge = document.getElementById('catAge').value.trim();
+  const email = document.getElementById('email').value.trim();
+  
+  if (!catName || !catAge || !email) {
+    alert('Please fill in at least: Cat Name, Age, and Email.');
+    return;
+  }
+  
+  orderIdCounter++;
+  const orderId = 'CMF-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(orderIdCounter).padStart(3,'0');
+  localStorage.setItem('cfm_counter', orderIdCounter);
+  
+  const healthChecks = [];
+  document.querySelectorAll('#panel-quiz input[type=checkbox]:checked').forEach(cb => {
+    if (cb.value !== 'none_health') healthChecks.push(cb.value);
+  });
+  
+  currentOrder = {
+    orderId,
+    catName, catAge,
+    catWeight: document.getElementById('catWeight').value.trim(),
+    catBreed: document.getElementById('catBreed').value,
+    catFixed: document.getElementById('catFixed').value,
+    currentFood: document.getElementById('currentFood').value.trim(),
+    foodType: document.getElementById('foodType').value,
+    feedingFreq: document.getElementById('feedingFreq').value,
+    healthChecks,
+    extraNotes: document.getElementById('extraNotes').value.trim(),
+    budget: document.getElementById('budget').value,
+    email,
+    tier: selectedTier,
+    amount: selectedTier === 'pro' ? 29 : 19,
+    status: 'unpaid',
+    createdAt: new Date().toISOString()
+  };
+  
+  // Show payment panel
+  document.getElementById('orderIdDisplay').textContent = orderId;
+  document.getElementById('payBtn').textContent = 'Pay $' + currentOrder.amount + ' with Card →';
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-payment').classList.add('active');
+  document.getElementById('tier-basic').classList.toggle('selected', selectedTier === 'basic');
+  document.getElementById('tier-pro').classList.toggle('selected', selectedTier === 'pro');
+}
+
+// ===== TIER SELECTION =====
+function selectTier(tier) {
+  selectedTier = tier;
+  document.getElementById('tier-basic').classList.toggle('selected', tier === 'basic');
+  document.getElementById('tier-pro').classList.toggle('selected', tier === 'pro');
+  if (currentOrder) {
+    currentOrder.tier = tier;
+    currentOrder.amount = tier === 'pro' ? 29 : 19;
+    document.getElementById('payBtn').textContent = 'Pay $' + currentOrder.amount + ' with Card →';
+  }
+}
+
+// ===== PAYMENT =====
+function processPayment() {
+  if (!currentOrder) return;
+  
+  // Show processing state
+  const btn = document.getElementById('payBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  
+  // For MVP: Simulate payment success with clear instructions
+  // In production, this would use Paddle.Checkout.open()
+  simulatePayment();
+}
+
+function simulatePayment() {
+  // Mark order as paid
+  currentOrder.status = 'paid';
+  currentOrder.paidAt = new Date().toISOString();
+  orders.push(currentOrder);
+  localStorage.setItem('cfm_orders', JSON.stringify(orders));
+  
+  // Show success
+  document.getElementById('panel-payment').innerHTML = `
+    <div class="card" style="text-align:center">
+      <h2 style="color:#2e7d32">✅ Order Confirmed!</h2>
+      <p style="font-size:15px;margin:16px 0">Thank you! Your order <strong>#${currentOrder.orderId}</strong> is confirmed.</p>
+      <p style="font-size:14px;color:#555">We'll deliver your <strong>${currentOrder.tier === 'pro' ? 'Pro' : 'Basic'} Report</strong> to <strong>${currentOrder.email}</strong> within 24 hours.</p>
+      <div class="card" style="background:#f7faf5;margin-top:16px">
+        <h3>📋 Summary</h3>
+        <p style="font-size:13px">Cat: ${currentOrder.catName} · Amount: $${currentOrder.amount} · Status: Paid</p>
+      </div>
+      <button class="btn" style="margin-top:16px" onclick="switchTab('home');location.reload()">Back to Home</button>
+    </div>`;
+  
+  // Save to tracking
+  const tracker = JSON.parse(localStorage.getItem('cfm_tracker') || '[]');
+  tracker.push({orderId:currentOrder.orderId,email:currentOrder.email,amount:currentOrder.amount,tier:currentOrder.tier,time:currentOrder.paidAt});
+  localStorage.setItem('cfm_tracker', JSON.stringify(tracker));
+}
+
+// ===== KNOWLEDGE BASE =====
+function renderKB() {
+  const tier = document.getElementById('kbTier').value;
+  const stage = document.getElementById('kbLifeStage').value;
+  const special = document.getElementById('kbSpecial').value;
+  const search = document.getElementById('kbSearch').value.toLowerCase();
+  
+  let filtered = catFoodDB;
+  if (tier) filtered = filtered.filter(f => f.tier === tier);
+  if (stage) filtered = filtered.filter(f => f.life_stage === stage || f.life_stage === 'All Life Stages');
+  if (special) {
+    if (special === 'grain_free') filtered = filtered.filter(f => f.grain_free);
+    else filtered = filtered.filter(f => f.special.includes(special));
+  }
+  if (search) filtered = filtered.filter(f => f.name.toLowerCase().includes(search));
+  
+  const html = filtered.map(f => `
+    <div class="kb-card">
+      <div class="brand-name">${f.name} <span class="brand-origin">· ${f.origin} · ${f.tier}</span></div>
+      <div class="brand-detail">
+        <span>Protein <b>${f.protein}%</b></span>
+        <span>Fat <b>${f.fat}%</b></span>
+        <span>Carbs ~<b>${f.carb_est}%</b></span>
+        <span>${f.grain_free ? '✅ Grain-Free' : 'Contains Grains'}</span>
+      </div>
+      <div class="brand-price">💰 ~$${f.price_monthly}/month</div>
+      <div class="brand-note">${f.notes}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:4px">Life Stage: ${f.life_stage} · Protein: ${f.main_protein}</div>
+    </div>
+  `).join('');
+  
+  document.getElementById('kbResults').innerHTML = html || '<p style="color:#999;text-align:center;padding:20px">No brands match your filters.</p>';
+}
+
+// ===== ORDERS =====
+function renderOrders() {
+  orders = JSON.parse(localStorage.getItem('cfm_orders') || '[]');
+  
+  const total = orders.length;
+  const totalRevenue = orders.filter(o => o.status === 'paid').reduce((sum, o) => sum + o.amount, 0);
+  const pending = orders.filter(o => o.status === 'paid').length;
+  
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statRevenue').textContent = '$' + totalRevenue;
+  document.getElementById('statPending').textContent = pending;
+  
+  if (orders.length === 0) {
+    document.getElementById('orderList').innerHTML = '<p style="color:#999;text-align:center;padding:20px">No orders yet. Complete a quiz to get started!</p>';
+    return;
+  }
+  
+  const html = '<table><tr><th>Order ID</th><th>Cat</th><th>Tier</th><th>Amount</th><th>Status</th><th>Date</th><th>Email</th></tr>' +
+    orders.slice().reverse().map(o => `
+      <tr>
+        <td>#${o.orderId}</td>
+        <td>${o.catName}</td>
+        <td>${o.tier === 'pro' ? 'Pro' : 'Basic'}</td>
+        <td>$${o.amount}</td>
+        <td><span class="badge ${o.status === 'paid' ? 'badge-paid' : o.status === 'pending' ? 'badge-pending' : 'badge-unpaid'}">${o.status}</span></td>
+        <td>${new Date(o.createdAt).toLocaleDateString()}</td>
+        <td style="font-size:10px">${o.email}</td>
+      </tr>
+    `).join('') + '</table>';
+  
+  document.getElementById('orderList').innerHTML = html;
+}
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  initPaddle();
+  renderKB();
+  
+  // Hash-based routing: support direct links like /#terms, /#privacy, /#refunds
+  const hash = window.location.hash.replace('#','');
+  if (['terms','privacy','refunds','quiz','kb','orders'].includes(hash)) {
+    switchTab(hash);
+  }
+});
+</script>
+</body>
+</html>
