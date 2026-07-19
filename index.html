@@ -97,6 +97,26 @@ tr:hover td{background:#f9fcf9}
 .feedback-success{text-align:center;padding:24px;background:#e8f5e9;border-radius:12px;display:none}
 .feedback-success .check{font-size:40px;margin-bottom:8px}
 .feedback-success h4{color:#2e7d32;font-size:16px;margin-bottom:4px}
+/* Quiz sections */
+.quiz-section{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #eef2ee}
+.quiz-section:last-of-type{border-bottom:none}
+.quiz-section-title{font-size:15px;font-weight:700;color:#2e5a3b;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.quiz-section-title .step{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#4a7c59;color:#fff;font-size:12px;font-weight:700}
+.quiz-section-desc{font-size:12px;color:#999;margin-bottom:14px}
+.quiz-question{margin-bottom:14px}
+.quiz-question>label{font-size:13px;font-weight:600;color:#444;margin-bottom:6px}
+.quiz-question .hint{font-size:11px;color:#aaa;font-weight:400}
+.quiz-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-half{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-checkboxes{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
+.quiz-checkbox{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;color:#444;cursor:pointer;padding:6px 8px;border-radius:8px;transition:background .15s;margin:0}
+.quiz-checkbox:hover{background:#f7faf5}
+.quiz-checkbox input[type=checkbox],.quiz-checkbox input[type=radio]{width:auto;margin:0;flex-shrink:0}
+.quiz-progress{display:flex;gap:4px;margin-bottom:20px}
+.quiz-progress .seg{flex:1;height:4px;border-radius:2px;background:#e8e8e8;transition:background .3s}
+.quiz-progress .seg.done{background:#4a7c59}
+.quiz-progress .seg.active{background:#8fbc8f}
+@media(max-width:500px){.quiz-row,.quiz-half,.quiz-checkboxes{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -116,7 +136,7 @@ tr:hover td{background:#f9fcf9}
 <div id="panel-home" class="panel active">
   <div class="hero">
     <h1>Stop guessing what to feed your cat</h1>
-    <p>Get a personalized cat food recommendation based on YOUR cat's age, health, and budget — not marketing hype. Backed by nutrition data from 20+ top US brands.</p>
+    <p>Get a personalized cat food recommendation based on YOUR cat's age, health, and budget — not marketing hype. Backed by nutrition data from 89+ products across 26 top US brands.</p>
     <div class="price">$19 <span>/ per report</span></div>
     <a class="cta-btn" onclick="switchTab('quiz')">Get My Cat's Match →</a>
   </div>
@@ -124,8 +144,8 @@ tr:hover td{background:#f9fcf9}
   <div class="card">
     <h2>How It Works</h2>
     <div class="benefits">
-      <div class="benefit"><strong>1. Answer 12 Questions</strong><span>About your cat's profile, diet, health, and budget</span></div>
-      <div class="benefit"><strong>2. We Analyze</strong><span>Cross-reference 50+ nutrition metrics across brands</span></div>
+      <div class="benefit"><strong>1. Answer 16 Questions</strong><span>About your cat's health, diet history, and preferences</span></div>
+      <div class="benefit"><strong>2. We Analyze</strong><span>Cross-reference 89+ product lines across 26 brands</span></div>
       <div class="benefit"><strong>3. Get Your Report</strong><span>3 personalized picks with transition guide</span></div>
       <div class="benefit"><strong>4. Feed Confidently</strong><span>Know exactly what's in the bowl and why</span></div>
     </div>
@@ -205,73 +225,245 @@ tr:hover td{background:#f9fcf9}
 <!-- QUIZ PANEL -->
 <div id="panel-quiz" class="panel">
   <div class="card">
-    <h2>🐱 Tell Us About Your Cat</h2>
-    <p style="font-size:12px;color:#999;margin-bottom:14px">12 questions. 3 minutes. We'll do the rest.</p>
+    <h2>Find Your Cat's Perfect Food Match</h2>
+    <p style="font-size:12px;color:#999;margin-bottom:14px">16 questions. 4 minutes. Real nutrition science behind every recommendation.</p>
 
-    <h3>Basic Info</h3>
-    <label>Cat's Name</label>
-    <input type="text" id="catName" placeholder="e.g. Luna, Oliver">
-
-    <div class="row">
-      <div><label>Age</label><input type="text" id="catAge" placeholder="e.g. 8 months, 3 years"></div>
-      <div><label>Weight</label><input type="text" id="catWeight" placeholder="e.g. 4.2 kg, 9.3 lbs"></div>
+    <div class="quiz-progress" id="quizProgress">
+      <div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
     </div>
 
-    <div class="row">
-      <div>
-        <label>Breed</label>
-        <select id="catBreed">
+    <!-- SECTION 1: Meet Your Cat -->
+    <div class="quiz-section">
+      <div class="quiz-section-title"><span class="step">1</span> Meet Your Cat</div>
+      <div class="quiz-section-desc">Basic profile helps us narrow down life-stage and breed-specific needs.</div>
+
+      <div class="quiz-question">
+        <label>Q1. Cat's Name</label>
+        <input type="text" id="catName" placeholder="e.g. Luna, Oliver, Mochi">
+      </div>
+
+      <div class="quiz-row">
+        <div class="quiz-question">
+          <label>Q2. Age</label>
+          <select id="catAge">
+            <option value="">Select...</option>
+            <option value="kitten_0_6m">Under 6 months</option>
+            <option value="kitten_6_12m">6-12 months</option>
+            <option value="adult_1_3y">1-3 years</option>
+            <option value="adult_3_7y">3-7 years</option>
+            <option value="adult_7_10y">7-10 years</option>
+            <option value="senior_10y">10+ years</option>
+          </select>
+        </div>
+        <div class="quiz-question">
+          <label>Q3. Weight <span class="hint">(lbs or kg)</span></label>
+          <input type="text" id="catWeight" placeholder="e.g. 10 lbs, 4.5 kg">
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <label>Body Condition <span class="hint">(helps us assess calorie needs)</span></label>
+        <select id="bodyCondition">
           <option value="">Select...</option>
-          <option>Domestic Shorthair</option><option>Domestic Longhair</option>
-          <option>Siamese</option><option>Maine Coon</option><option>Persian</option>
-          <option>Bengal</option><option>Ragdoll</option><option>British Shorthair</option>
-          <option>Sphynx</option><option>Other / Mixed</option>
+          <option value="underweight">Underweight — ribs very visible, tucked belly</option>
+          <option value="ideal">Ideal — ribs palpable, slight waist</option>
+          <option value="overweight">Overweight — ribs hard to feel, round belly</option>
+          <option value="obese">Obese — heavy fat deposits, no visible waist</option>
+          <option value="unsure">Not sure</option>
         </select>
       </div>
-      <div>
-        <label>Spayed / Neutered?</label>
-        <select id="catFixed"><option value="">Select...</option><option>Yes</option><option>No</option></select>
+
+      <div class="quiz-row">
+        <div class="quiz-question">
+          <label>Q4. Breed</label>
+          <select id="catBreed">
+            <option value="">Select...</option>
+            <option>Domestic Shorthair</option><option>Domestic Longhair</option>
+            <option>Siamese</option><option>Maine Coon</option><option>Persian</option>
+            <option>Bengal</option><option>Ragdoll</option><option>British Shorthair</option>
+            <option>Sphynx</option><option>Scottish Fold</option><option>Abyssinian</option>
+            <option>Russian Blue</option><option>American Shorthair</option>
+            <option>Other / Mixed</option>
+          </select>
+        </div>
+        <div class="quiz-question">
+          <label>Q5. Spayed/Neutered + Lifestyle</label>
+          <select id="catLifestyle">
+            <option value="">Select...</option>
+            <option value="fixed_indoor">Fixed, indoor only</option>
+            <option value="fixed_indooroutdoor">Fixed, indoor + outdoor</option>
+            <option value="intact_indoor">Not fixed, indoor only</option>
+            <option value="intact_indooroutdoor">Not fixed, indoor + outdoor</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <h3>Current Diet</h3>
-    <label>What are you currently feeding?</label>
-    <input type="text" id="currentFood" placeholder="Brand and product name, e.g. Purina Pro Plan Chicken">
+    <!-- SECTION 2: What's Bothering You? -->
+    <div class="quiz-section">
+      <div class="quiz-section-title"><span class="step">2</span> What's Bothering You?</div>
+      <div class="quiz-section-desc">This is the key section — tells us what problems we need to solve.</div>
 
-    <label>Food type</label>
-    <select id="foodType"><option value="">Select...</option><option>Dry (kibble)</option><option>Wet (canned)</option><option>Both dry + wet</option><option>Raw / homemade</option><option>Not sure</option></select>
+      <div class="quiz-question">
+        <label>Q6. Why are you looking for new food? <span class="hint">(pick closest match)</span></label>
+        <select id="reasonForNew">
+          <option value="">Select...</option>
+          <option value="health_issue">My cat has a health issue (digestive, urinary, etc.)</option>
+          <option value="picky_eater">My cat refuses to eat current food</option>
+          <option value="worried_ingredients">I'm worried about current food's ingredients</option>
+          <option value="vet_recommended">Vet recommended a change</option>
+          <option value="weight_concern">My cat needs to gain or lose weight</option>
+          <option value="proactive">Just want to find the best option available</option>
+        </select>
+      </div>
 
-    <label>How often does your cat eat?</label>
-    <select id="feedingFreq"><option value="">Select...</option><option>Free feeding (always available)</option><option>2 meals/day</option><option>3+ meals/day</option><option>Once a day</option></select>
+      <div class="quiz-question">
+        <label>Q7. Any symptoms your cat is showing? <span class="hint">(check all that apply)</span></label>
+        <div class="quiz-checkboxes" id="symptomsGroup">
+          <label class="quiz-checkbox"><input type="checkbox" value="soft_stool"> Soft stool / diarrhea</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="vomiting"> Vomiting / regurgitation</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="low_energy"> Low energy / lethargic</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="dull_coat"> Dull coat / excessive shedding</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="hairballs"> Frequent hairballs</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="urinary_issues"> Straining to urinate / accidents</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="itching"> Itching / skin irritation</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="weight_gain"> Unexplained weight gain</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="none_healthy"> None — my cat seems healthy!</label>
+        </div>
+      </div>
 
-    <h3>Health & Preferences</h3>
-    <label>Any health concerns? <span style="font-weight:400;color:#999">(check all that apply)</span></label>
-    <div class="chk-grid">
-      <label><input type="checkbox" value="overweight"> Overweight</label>
-      <label><input type="checkbox" value="underweight"> Underweight</label>
-      <label><input type="checkbox" value="digestive"> Digestive issues / soft stool</label>
-      <label><input type="checkbox" value="urinary"> Urinary / kidney concerns</label>
-      <label><input type="checkbox" value="allergies"> Food allergies / sensitivities</label>
-      <label><input type="checkbox" value="dental"> Dental problems</label>
-      <label><input type="checkbox" value="hairball"> Frequent hairballs</label>
-      <label><input type="checkbox" value="pickyeater"> Picky eater</label>
-      <label><input type="checkbox" value="none_health"> None — healthy cat!</label>
+      <div class="quiz-question">
+        <label>Q8. Any vet-diagnosed conditions? <span class="hint">(check all that apply)</span></label>
+        <div class="quiz-checkboxes" id="conditionsGroup">
+          <label class="quiz-checkbox"><input type="checkbox" value="ibd"> IBD / inflammatory bowel</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="kidney_disease"> Kidney disease (CKD)</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="diabetes"> Diabetes</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="hyperthyroid"> Hyperthyroidism</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="food_allergy"> Food allergy / intolerance</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="uti_crystals"> UTI / urinary crystals</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="dental_disease"> Dental disease</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="none_diagnosed"> None diagnosed</label>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <label>Q9. Does your cat need a special diet? <span class="hint">(check all)</span></label>
+        <div class="quiz-checkboxes" id="specialDietGroup">
+          <label class="quiz-checkbox"><input type="checkbox" value="grain_free"> Grain-free</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="limited_ingredient"> Limited ingredient</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="high_protein"> High protein</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="low_carb"> Low carbohydrate</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="novel_protein"> Novel protein (rabbit, duck, venison...)</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="prescription"> Prescription diet (vet-authorized)</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="no_special"> No special requirements</label>
+        </div>
+        <div class="notice" style="margin-top:6px">If your cat is on a <strong>prescription diet</strong>, please consult your vet before switching. We'll flag compatible options in your report.</div>
+      </div>
     </div>
 
-    <label>Anything else we should know?</label>
-    <textarea id="extraNotes" placeholder="e.g. Vet recommended grain-free, hates fish flavors, needs to gain weight..."></textarea>
+    <!-- SECTION 3: Food History -->
+    <div class="quiz-section">
+      <div class="quiz-section-title"><span class="step">3</span> Food History</div>
+      <div class="quiz-section-desc">Knowing what's worked (and what hasn't) prevents repeating past mistakes.</div>
 
-    <h3>Your Budget</h3>
-    <label>Monthly cat food budget</label>
-    <select id="budget"><option value="">Select...</option><option>$15-25/month (budget-friendly)</option><option>$25-40/month (mid-range)</option><option>$40-60/month (premium)</option><option>$60+/month (no limit — best quality)</option></select>
+      <div class="quiz-row">
+        <div class="quiz-question">
+          <label>Q10. Current brand</label>
+          <input type="text" id="currentBrand" placeholder="e.g. Purina Pro Plan">
+        </div>
+        <div class="quiz-question">
+          <label>Product / formula</label>
+          <input type="text" id="currentProduct" placeholder="e.g. Savor Chicken & Rice">
+        </div>
+      </div>
 
-    <h3>Your Email</h3>
+      <div class="quiz-question">
+        <label>Q11. What's NOT working about current food? <span class="hint">(check all that apply)</span></label>
+        <div class="quiz-checkboxes" id="notWorkingGroup">
+          <label class="quiz-checkbox"><input type="checkbox" value="cat_wont_eat"> Cat won't eat it / lost interest</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="digestive_issues"> Causes digestive issues</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="too_expensive"> Too expensive for my budget</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="ingredient_concerns"> Worried about ingredient quality</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="weight_problem"> Not helping with weight goals</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="nothing_just_exploring"> Nothing wrong — just exploring options</label>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <label>Q12. Foods you've tried before <span class="hint">(brand names)</span></label>
+        <input type="text" id="foodsTried" placeholder="e.g. Blue Buffalo, Hill's, Royal Canin">
+      </div>
+
+      <div class="quiz-question">
+        <label>What worked or didn't work? <span class="hint">(optional)</span></label>
+        <textarea id="foodsTriedResult" placeholder="e.g. Blue Buffalo caused soft stool. Hill's was fine but boring. Cat loved Royal Canin but I don't like the corn..."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Preferences & Budget -->
+    <div class="quiz-section" style="border-bottom:none">
+      <div class="quiz-section-title"><span class="step">4</span> Your Preferences</div>
+      <div class="quiz-section-desc">Final details to match your values and budget.</div>
+
+      <div class="quiz-row">
+        <div class="quiz-question">
+          <label>Q13. Preferred food type</label>
+          <select id="foodTypePref">
+            <option value="">Select...</option>
+            <option value="dry">Dry (kibble) only</option>
+            <option value="wet">Wet (canned) only</option>
+            <option value="mix">Mix of dry + wet</option>
+            <option value="raw">Raw / freeze-dried</option>
+            <option value="open">Open to any type</option>
+          </select>
+        </div>
+        <div class="quiz-question">
+          <label>Q14. Monthly budget</label>
+          <select id="budget">
+            <option value="">Select...</option>
+            <option value="under_20">Under $20/month</option>
+            <option value="20_35">$20-35/month</option>
+            <option value="35_50">$35-50/month</option>
+            <option value="50_75">$50-75/month</option>
+            <option value="75_plus">$75+/month — best quality regardless</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="quiz-question">
+        <label>Q15. Ingredient philosophy <span class="hint">(pick closest match)</span></label>
+        <select id="ingredientPhilosophy">
+          <option value="">Select...</option>
+          <option value="natural_only">100% natural, no by-products ever</option>
+          <option value="natural_flexible">Prefer natural but OK with by-products if well-sourced</option>
+          <option value="science_first">Trust science — if research backs it, I'm fine with it</option>
+          <option value="grain_free_strict">Must be grain-free, no exceptions</option>
+          <option value="human_grade">Human-grade ingredients only</option>
+          <option value="value_focused">Best nutrition for the price, ingredients matter less</option>
+        </select>
+      </div>
+
+      <div class="quiz-question">
+        <label>Q16. Where do you usually shop? <span class="hint">(check all)</span></label>
+        <div class="quiz-checkboxes" id="shopWhereGroup">
+          <label class="quiz-checkbox"><input type="checkbox" value="amazon"> Amazon</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="chewy"> Chewy</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="petsmart"> PetSmart</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="petco"> Petco</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="grocery"> Grocery store</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="independent"> Independent pet store</label>
+          <label class="quiz-checkbox"><input type="checkbox" value="subscription"> Subscription box</label>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:16px">Your Email</h3>
     <label>Where should we send your report?</label>
-    <input type="email" id="email" placeholder="you@email.com">
+    <input type="email" id="quizEmail" placeholder="you@email.com">
 
-    <div class="notice">⚠️ <strong>Not medical advice.</strong> We provide nutrition guidance based on your cat's profile. For medical conditions, consult your veterinarian.</div>
+    <div class="notice"><strong>Not medical advice.</strong> We provide nutrition guidance based on published data. For medical conditions, always consult your veterinarian.</div>
 
-    <button class="btn" onclick="submitQuiz()">Submit & Continue to Payment →</button>
+    <button class="btn" onclick="submitQuiz()">Submit & Continue to Payment</button>
   </div>
 </div>
 
@@ -301,12 +493,12 @@ tr:hover td{background:#f9fcf9}
 <div id="panel-kb" class="panel">
   <div class="card">
     <h2>📚 Cat Food Knowledge Base</h2>
-    <p style="font-size:12px;color:#888;margin-bottom:12px">20+ US brands with nutrition data and pricing. For reference only.</p>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">89 products from 26 brands with nutrition data and pricing. For reference only.</p>
     <div class="kb-filter">
       <select id="kbTier" onchange="renderKB()"><option value="">All Tiers</option><option>Premium</option><option>Mid-Range</option><option>Budget</option></select>
       <select id="kbLifeStage" onchange="renderKB()"><option value="">All Life Stages</option><option>Kitten</option><option>Adult</option><option>Senior</option><option>All Life Stages</option></select>
-      <select id="kbSpecial" onchange="renderKB()"><option value="">All Needs</option><option>digestive</option><option>urinary</option><option>weight</option><option>allergy</option><option>hairball</option><option>dental</option><option>grain_free</option></select>
-      <input type="text" id="kbSearch" placeholder="Search brand..." oninput="renderKB()">
+      <select id="kbSpecial" onchange="renderKB()"><option value="">All Needs</option><option value="digestive">Digestive</option><option value="urinary">Urinary</option><option value="weight">Weight</option><option value="allergy">Allergy</option><option value="hairball">Hairball</option><option value="indoor">Indoor</option><option value="kitten">Kitten</option><option value="senior">Senior</option><option value="grain_free">Grain-Free</option><option value="high_protein">High Protein</option><option value="low_carb">Low Carb</option><option value="limited_ingredient">Limited Ingredient</option><option value="novel_protein">Novel Protein</option><option value="pickyeater">Picky Eater</option><option value="budget">Budget</option></select>
+      <input type="text" id="kbSearch" placeholder="Search brand or product..." oninput="renderKB()">
     </div>
     <div id="kbResults"><div class="loading">Loading cat food data...</div></div>
   </div>
@@ -331,32 +523,122 @@ tr:hover td{background:#f9fcf9}
 <script>
 // ===== CAT FOOD DATABASE =====
 const catFoodDB = [
-  // Premium Tier
-  {id:1,name:"Orijen Original Cat",origin:"Canada",tier:"Premium",protein:40,fat:20,carb_est:18,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"All Life Stages",special:["grain_free","high_protein"],price_range:"$35-50/month",price_monthly:42,rating:4.8,notes:"Biologically appropriate. 85% animal ingredients. High protein density."},
-  {id:2,name:"Acana Meadowlands",origin:"Canada",tier:"Premium",protein:35,fat:20,carb_est:22,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"All Life Stages",special:["grain_free"],price_range:"$30-45/month",price_monthly:38,rating:4.6,notes:"Slightly lower protein than Orijen. Good for cats transitioning from kibble."},
-  {id:3,name:"Ziwi Peak Air-Dried Chicken",origin:"New Zealand",tier:"Premium",protein:38,fat:30,carb_est:8,grain_free:true,main_protein:"Chicken, Chicken Organs",life_stage:"All Life Stages",special:["grain_free","high_protein","digestive"],price_range:"$45-60/month",price_monthly:52,rating:4.9,notes:"Air-dried raw. 96% meat/organ/bone. Ethically sourced. Very low carb."},
-  {id:4,name:"Instinct Raw Boost Grain-Free",origin:"USA",tier:"Premium",protein:42,fat:22,carb_est:16,grain_free:true,main_protein:"Chicken, Turkey, Menhaden Fish",life_stage:"Adult",special:["grain_free","high_protein","digestive"],price_range:"$35-50/month",price_monthly:40,rating:4.7,notes:"Freeze-dried raw pieces mixed in. Probiotics included. Great for picky eaters."},
-  {id:5,name:"Tiki Cat Born Carnivore",origin:"USA",tier:"Premium",protein:43,fat:18,carb_est:15,grain_free:true,main_protein:"Chicken, Chicken Meal, Herring",life_stage:"Adult",special:["grain_free","high_protein","weight"],price_range:"$28-40/month",price_monthly:34,rating:4.5,notes:"Very high protein. Baked kibble. Good for active cats."},
-  {id:6,name:"Wellness CORE Original",origin:"USA",tier:"Premium",protein:38,fat:18,carb_est:20,grain_free:true,main_protein:"Turkey, Chicken, Turkey Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$25-38/month",price_monthly:30,rating:4.5,notes:"Solid premium choice. Widely available. Good protein-to-fat ratio."},
-  // Mid-Range Tier
-  {id:7,name:"Blue Buffalo Wilderness Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:22,grain_free:true,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$22-35/month",price_monthly:28,rating:4.3,notes:"LifeSource Bits for antioxidants. Some cats pick out the bits. Popular choice."},
-  {id:8,name:"Merrick Purrfect Bistro",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:24,grain_free:true,main_protein:"Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["grain_free","hairball"],price_range:"$20-32/month",price_monthly:25,rating:4.2,notes:"Deboned chicken first ingredient. Good for hairball control."},
-  {id:9,name:"Nutro Wholesome Essentials",origin:"USA",tier:"Mid-Range",protein:33,fat:16,carb_est:28,grain_free:false,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["digestive"],price_range:"$18-28/month",price_monthly:22,rating:4.1,notes:"Non-GMO ingredients. Good for sensitive stomachs. Contains rice."},
-  {id:10,name:"Purina Pro Plan Savor",origin:"USA",tier:"Mid-Range",protein:36,fat:17,carb_est:24,grain_free:false,main_protein:"Chicken, Rice, Poultry By-Product Meal",life_stage:"Adult",special:["digestive","weight"],price_range:"$18-28/month",price_monthly:22,rating:4.4,notes:"Vet-recommended. Live probiotics. Reliable quality control. Widely available."},
-  {id:11,name:"Hill's Science Diet Adult Indoor",origin:"USA",tier:"Mid-Range",protein:29,fat:14,carb_est:32,grain_free:false,main_protein:"Chicken, Whole Grain Wheat",life_stage:"Adult",special:["weight","hairball","digestive"],price_range:"$20-30/month",price_monthly:24,rating:4.3,notes:"Vet #1 recommended. Indoor formula. Natural fiber for hairball control."},
-  {id:12,name:"Royal Canin Indoor Adult",origin:"France",tier:"Mid-Range",protein:27,fat:13,carb_est:35,grain_free:false,main_protein:"Chicken Meal, Rice, Corn",life_stage:"Adult",special:["weight","digestive","hairball"],price_range:"$22-32/month",price_monthly:26,rating:4.2,notes:"Breed-specific formulas available. Good stool odor reduction. Highly palatable."},
-  {id:13,name:"Iams ProActive Health Adult",origin:"USA",tier:"Mid-Range",protein:32,fat:15,carb_est:30,grain_free:false,main_protein:"Chicken, Chicken By-Product Meal",life_stage:"Adult",special:["weight","hairball"],price_range:"$12-20/month",price_monthly:15,rating:4.0,notes:"Good value. L-carnitine for weight. Prebiotics for digestion."},
-  {id:14,name:"Rachael Ray Nutrish Indoor",origin:"USA",tier:"Mid-Range",protein:30,fat:14,carb_est:32,grain_free:false,main_protein:"Chicken, Chicken Meal",life_stage:"Adult",special:["weight"],price_range:"$14-22/month",price_monthly:17,rating:3.9,notes:"No poultry by-product meal. Added vitamins & minerals. Simple ingredient list."},
-  // Budget Tier
-  {id:15,name:"Purina ONE Tender Selects",origin:"USA",tier:"Budget",protein:34,fat:13,carb_est:30,grain_free:false,main_protein:"Chicken, Rice Flour, Corn Gluten Meal",life_stage:"Adult",special:[],price_range:"$10-16/month",price_monthly:12,rating:4.1,notes:"Good budget option. Real chicken #1. No fillers. Widely available."},
-  {id:16,name:"Fancy Feast Dry",origin:"USA",tier:"Budget",protein:32,fat:12,carb_est:33,grain_free:false,main_protein:"Chicken, Poultry By-Product Meal",life_stage:"Adult",special:[],price_range:"$8-14/month",price_monthly:10,rating:3.7,notes:"Budget-friendly. Widely available. Cats generally like the taste."},
-  {id:17,name:"9Lives Daily Essentials",origin:"USA",tier:"Budget",protein:28,fat:9,carb_est:38,grain_free:false,main_protein:"Chicken By-Product Meal, Ground Corn",life_stage:"Adult",special:[],price_range:"$6-10/month",price_monthly:8,rating:3.3,notes:"Very budget. taurine fortified. Better than generic store brands."},
-  {id:18,name:"Meow Mix Original Choice",origin:"USA",tier:"Budget",protein:31,fat:11,carb_est:36,grain_free:false,main_protein:"Chicken By-Product Meal, Ground Corn",life_stage:"Adult",special:[],price_range:"$5-9/month",price_monthly:7,rating:3.2,notes:"Most affordable. Cats like taste. Contains food dyes. Basic nutrition."},
-  // Specialty
-  {id:19,name:"Hill's Prescription Diet c/d",origin:"USA",tier:"Premium",protein:30,fat:18,carb_est:30,grain_free:false,main_protein:"Chicken, Pork Liver",life_stage:"Adult",special:["urinary"],price_range:"$45-60/month",price_monthly:50,rating:4.6,notes:"Veterinary diet. For urinary health. Requires vet authorization."},
-  {id:20,name:"Purina Pro Plan Veterinary UR",origin:"USA",tier:"Premium",protein:33,fat:16,carb_est:28,grain_free:false,main_protein:"Chicken, Rice",life_stage:"Adult",special:["urinary"],price_range:"$40-55/month",price_monthly:45,rating:4.5,notes:"Prescription. Urinary tract health. Requires vet authorization."},
-  {id:21,name:"Weruva Cats in the Kitchen (Wet)",origin:"USA",tier:"Premium",protein:55,fat:20,carb_est:8,grain_free:true,main_protein:"Chicken, Pumpkin",life_stage:"Adult",special:["grain_free","digestive","weight","urinary"],price_range:"$40-60/month",price_monthly:48,rating:4.7,notes:"High moisture (78%). Human-grade ingredients. Great for urinary health."},
-  {id:22,name:"Tiki Cat Aloha Friends (Wet)",origin:"USA",tier:"Premium",protein:50,fat:22,carb_est:10,grain_free:true,main_protein:"Chicken, Pumpkin",life_stage:"Adult",special:["grain_free","digestive"],price_range:"$35-50/month",price_monthly:42,rating:4.6,notes:"High moisture. Pumpkin for digestion. Good variety of proteins."}
+  // ===== HILL'S SCIENCE DIET (6) =====
+  {id:1,brand:"Hill's Science Diet",name:"Indoor Adult Chicken",origin:"USA",tier:"Mid-Range",protein:29,fat:14,carb_est:33,grain_free:false,main_protein:"Chicken, Whole Grain Wheat",life_stage:"Adult",special:["indoor","weight","hairball","digestive"],price_range:"$20-30/mo",price_monthly:24,rating:4.3,notes:"Vet #1 recommended. Natural fiber blend for hairball control. Moderate calories for indoor cats."},
+  {id:2,brand:"Hill's Science Diet",name:"Adult Sensitive Stomach & Skin",origin:"USA",tier:"Mid-Range",protein:28,fat:18,carb_est:30,grain_free:false,main_protein:"Chicken, Brewers Rice",life_stage:"Adult",special:["digestive","allergy","omega"],price_range:"$22-32/mo",price_monthly:26,rating:4.4,notes:"Prebiotic fiber for digestive health. Vitamin E & omega-6 for skin. Great for cats with soft stool."},
+  {id:3,brand:"Hill's Science Diet",name:"Adult Urinary Hairball Control",origin:"USA",tier:"Mid-Range",protein:29,fat:15,carb_est:32,grain_free:false,main_protein:"Chicken, Whole Grain Wheat",life_stage:"Adult",special:["urinary","hairball"],price_range:"$22-32/mo",price_monthly:26,rating:4.3,notes:"Controlled magnesium for urinary tract health. Natural fiber for hairball reduction."},
+  {id:4,brand:"Hill's Science Diet",name:"Kitten Healthy Development",origin:"USA",tier:"Mid-Range",protein:32,fat:22,carb_est:25,grain_free:false,main_protein:"Chicken, Whole Grain Corn",life_stage:"Kitten",special:["kitten"],price_range:"$20-30/mo",price_monthly:24,rating:4.4,notes:"DHA from fish oil for brain/eye development. Clinically proven antioxidants."},
+  {id:5,brand:"Hill's Science Diet",name:"Adult Perfect Weight",origin:"USA",tier:"Mid-Range",protein:34,fat:9,carb_est:35,grain_free:false,main_protein:"Chicken, Whole Grain Wheat",life_stage:"Adult",special:["weight"],price_range:"$22-32/mo",price_monthly:26,rating:4.2,notes:"Clinically proven to help cats lose weight safely. 31% fewer calories than regular adult formula."},
+  {id:6,brand:"Hill's Science Diet",name:"Senior 11+ Healthy Ageing",origin:"USA",tier:"Mid-Range",protein:27,fat:17,carb_est:32,grain_free:false,main_protein:"Chicken, Brewers Rice",life_stage:"Senior",special:["senior","kidney"],price_range:"$22-32/mo",price_monthly:26,rating:4.3,notes:"Controlled phosphorus for aging kidneys. Taurine for heart health. Antioxidant blend for immunity."},
+  // ===== PURINA PRO PLAN (7) =====
+  {id:7,brand:"Purina Pro Plan",name:"Savor Adult Chicken & Rice",origin:"USA",tier:"Mid-Range",protein:36,fat:17,carb_est:24,grain_free:false,main_protein:"Chicken, Rice, Poultry By-Product Meal",life_stage:"Adult",special:["digestive","probiotic"],price_range:"$18-28/mo",price_monthly:22,rating:4.4,notes:"Live probiotics for gut health. Vet-recommended. Consistent quality control. Widely available."},
+  {id:8,brand:"Purina Pro Plan",name:"Sensitive Skin & Stomach Salmon",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:25,grain_free:false,main_protein:"Salmon, Rice, Corn Gluten Meal",life_stage:"Adult",special:["digestive","allergy","omega"],price_range:"$20-30/mo",price_monthly:24,rating:4.3,notes:"Salmon as #1 ingredient. Omega fatty acids for skin. Fortified with live probiotics."},
+  {id:9,brand:"Purina Pro Plan",name:"Focus Adult Urinary Tract Health",origin:"USA",tier:"Mid-Range",protein:32,fat:14,carb_est:30,grain_free:false,main_protein:"Chicken, Rice, Corn Gluten Meal",life_stage:"Adult",special:["urinary"],price_range:"$20-30/mo",price_monthly:24,rating:4.3,notes:"Low dietary magnesium to reduce urinary crystals. Reduces urine pH. Vet-recommended."},
+  {id:10,brand:"Purina Pro Plan",name:"True Nature Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:20,grain_free:true,main_protein:"Chicken, Chicken Meal, Pea Protein",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$22-34/mo",price_monthly:27,rating:4.3,notes:"Grain-free formula with 40% protein. Good for cats sensitive to grains."},
+  {id:11,brand:"Purina Pro Plan",name:"Kitten Chicken & Rice",origin:"USA",tier:"Mid-Range",protein:38,fat:18,carb_est:22,grain_free:false,main_protein:"Chicken, Rice, Corn Gluten Meal",life_stage:"Kitten",special:["kitten"],price_range:"$18-28/mo",price_monthly:22,rating:4.4,notes:"DHA for brain and vision development. High-quality protein for lean muscle growth."},
+  {id:12,brand:"Purina Pro Plan",name:"Senior 11+ Classic Chicken",origin:"USA",tier:"Mid-Range",protein:30,fat:12,carb_est:33,grain_free:false,main_protein:"Chicken, Brewers Rice",life_stage:"Senior",special:["senior","kidney"],price_range:"$18-28/mo",price_monthly:22,rating:4.2,notes:"Adjusted protein and phosphorus for aging kidneys. Enhanced botanical oils for cognition."},
+  {id:13,brand:"Purina Pro Plan",name:"Weight Management Chicken",origin:"USA",tier:"Mid-Range",protein:37,fat:9,carb_est:30,grain_free:false,main_protein:"Chicken, Rice, Corn Gluten Meal",life_stage:"Adult",special:["weight"],price_range:"$18-28/mo",price_monthly:22,rating:4.1,notes:"25% less fat than regular Savor formula. High protein to preserve lean mass during weight loss."},
+  // ===== PURINA ONE (3) =====
+  {id:14,brand:"Purina ONE",name:"Tender Selects Chicken",origin:"USA",tier:"Budget",protein:34,fat:13,carb_est:30,grain_free:false,main_protein:"Chicken, Rice Flour, Corn Gluten Meal",life_stage:"Adult",special:["budget"],price_range:"$10-16/mo",price_monthly:12,rating:4.1,notes:"Good budget option. Real chicken #1. No fillers. Dual-texture kibble cats enjoy."},
+  {id:15,brand:"Purina ONE",name:"Sensitive Systems",origin:"USA",tier:"Budget",protein:33,fat:13,carb_est:31,grain_free:false,main_protein:"Chicken, Rice, Corn Gluten Meal",life_stage:"Adult",special:["digestive","budget"],price_range:"$12-18/mo",price_monthly:14,rating:4.0,notes:"Prebiotic fiber for sensitive tummies. Affordable option for cats with mild digestive issues."},
+  {id:16,brand:"Purina ONE",name:"Healthy Kitten",origin:"USA",tier:"Budget",protein:38,fat:16,carb_est:24,grain_free:false,main_protein:"Chicken, Rice, Corn Gluten Meal",life_stage:"Kitten",special:["kitten","budget"],price_range:"$10-16/mo",price_monthly:12,rating:4.2,notes:"DHA for brain/vision. Affordable kitten nutrition with real chicken first ingredient."},
+  // ===== ROYAL CANIN (5) =====
+  {id:17,brand:"Royal Canin",name:"Indoor Adult",origin:"France",tier:"Mid-Range",protein:27,fat:13,carb_est:35,grain_free:false,main_protein:"Chicken Meal, Rice, Corn",life_stage:"Adult",special:["indoor","weight","hairball"],price_range:"$22-32/mo",price_monthly:26,rating:4.2,notes:"Highly palatable. Excellent stool odor reduction. Reduced calorie density for less active indoor cats."},
+  {id:18,brand:"Royal Canin",name:"Urinary SO",origin:"France",tier:"Premium",protein:28,fat:15,carb_est:32,grain_free:false,main_protein:"Chicken Meal, Rice, Corn Gluten Meal",life_stage:"Adult",special:["urinary"],price_range:"$40-55/mo",price_monthly:46,rating:4.6,notes:"Prescription diet. Dissolves struvite stones. Creates unfavorable environment for crystal formation. Vet authorization required."},
+  {id:19,brand:"Royal Canin",name:"Fit 32 Adult",origin:"France",tier:"Mid-Range",protein:29,fat:16,carb_est:30,grain_free:false,main_protein:"Chicken Meal, Rice, Corn",life_stage:"Adult",special:["digestive"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Classic all-purpose adult formula. Highly digestible proteins. Good starter option."},
+  {id:20,brand:"Royal Canin",name:"Kitten",origin:"France",tier:"Mid-Range",protein:28,fat:18,carb_est:30,grain_free:false,main_protein:"Chicken Meal, Rice, Corn Gluten Meal",life_stage:"Kitten",special:["kitten"],price_range:"$22-32/mo",price_monthly:26,rating:4.3,notes:"Easy-to-chew kibble for baby teeth. Prebiotics + antioxidants for developing immune system."},
+  {id:21,brand:"Royal Canin",name:"Aging 12+ Sterilized",origin:"France",tier:"Mid-Range",protein:26,fat:13,carb_est:35,grain_free:false,main_protein:"Chicken Meal, Rice, Corn",life_stage:"Senior",special:["senior","weight","urinary"],price_range:"$24-34/mo",price_monthly:28,rating:4.2,notes:"Adapted phosphorus for aging kidneys. Moderate calories for spayed/neutered senior cats."},
+  // ===== BLUE BUFFALO (7) =====
+  {id:22,brand:"Blue Buffalo",name:"Wilderness Chicken Adult",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:22,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$22-35/mo",price_monthly:28,rating:4.3,notes:"LifeSource Bits for antioxidants. High protein from real chicken. Some cats pick out the bits."},
+  {id:23,brand:"Blue Buffalo",name:"Indoor Weight Control",origin:"USA",tier:"Mid-Range",protein:34,fat:10,carb_est:32,grain_free:false,main_protein:"Deboned Chicken, Brown Rice",life_stage:"Adult",special:["indoor","weight"],price_range:"$20-30/mo",price_monthly:24,rating:4.0,notes:"L-Carnitine for lean muscle. Reduced calories for indoor cats. Includes LifeSource Bits."},
+  {id:24,brand:"Blue Buffalo",name:"Sensitive Stomach Chicken",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:26,grain_free:true,main_protein:"Deboned Chicken, Turkey Meal, Peas",life_stage:"Adult",special:["digestive","grain_free"],price_range:"$24-36/mo",price_monthly:29,rating:4.2,notes:"Grain-free with prebiotics. Designed for cats with food sensitivities. No chicken by-product meal."},
+  {id:25,brand:"Blue Buffalo",name:"Wilderness Kitten Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:20,carb_est:20,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal",life_stage:"Kitten",special:["kitten","grain_free"],price_range:"$22-34/mo",price_monthly:27,rating:4.3,notes:"Grain-free kitten food. DHA from flaxseed. High protein for growing kittens."},
+  {id:26,brand:"Blue Buffalo",name:"Healthy Aging Senior",origin:"USA",tier:"Mid-Range",protein:30,fat:14,carb_est:32,grain_free:false,main_protein:"Deboned Chicken, Brown Rice",life_stage:"Senior",special:["senior"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Controlled sodium and phosphorus. Glucosamine for joint support. Soft kibble for aging teeth."},
+  {id:27,brand:"Blue Buffalo",name:"Basics Limited Ingredient Turkey",origin:"USA",tier:"Mid-Range",protein:32,fat:14,carb_est:30,grain_free:true,main_protein:"Turkey, Turkey Meal, Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy"],price_range:"$26-38/mo",price_monthly:31,rating:4.3,notes:"Limited ingredient diet. Single animal protein source. Good for cats with chicken sensitivities."},
+  {id:28,brand:"Blue Buffalo",name:"Freedom Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:38,fat:16,carb_est:24,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal",life_stage:"Adult",special:["grain_free"],price_range:"$20-32/mo",price_monthly:25,rating:4.1,notes:"Grain-free without grain-free controversy pricing. Moderate protein level. Good transition food."},
+  // ===== WELLNESS (7) =====
+  {id:29,brand:"Wellness",name:"CORE Original Deboned Turkey",origin:"USA",tier:"Premium",protein:38,fat:18,carb_est:20,grain_free:true,main_protein:"Deboned Turkey, Turkey Meal, Chicken Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$25-38/mo",price_monthly:30,rating:4.5,notes:"Solid premium choice. Widely available. Good protein-to-fat ratio. No fillers or by-products."},
+  {id:30,brand:"Wellness",name:"CORE Indoor Classic",origin:"USA",tier:"Premium",protein:36,fat:12,carb_est:26,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal",life_stage:"Adult",special:["indoor","weight","grain_free"],price_range:"$25-38/mo",price_monthly:30,rating:4.3,notes:"Fewer calories for indoor cats. Probiotics for digestion. Cranberries for urinary health."},
+  {id:31,brand:"Wellness",name:"Complete Health Chicken",origin:"USA",tier:"Mid-Range",protein:35,fat:15,carb_est:28,grain_free:false,main_protein:"Deboned Chicken, Chicken Meal, Ground Brown Rice",life_stage:"Adult",special:["digestive"],price_range:"$20-30/mo",price_monthly:24,rating:4.2,notes:"With-grain option. Flaxseed for omega fatty acids. Good for cats that do well with grains."},
+  {id:32,brand:"Wellness",name:"CORE Kitten Turkey & Chicken",origin:"USA",tier:"Premium",protein:38,fat:20,carb_est:20,grain_free:true,main_protein:"Deboned Turkey, Chicken Meal, Turkey Meal",life_stage:"Kitten",special:["kitten","grain_free"],price_range:"$26-38/mo",price_monthly:31,rating:4.4,notes:"Grain-free kitten formula. Taurine for heart/eye development. DHA from salmon oil."},
+  {id:33,brand:"Wellness",name:"Simple Limited Ingredient Salmon",origin:"USA",tier:"Premium",protein:32,fat:14,carb_est:30,grain_free:true,main_protein:"Salmon, Salmon Meal, Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy"],price_range:"$28-40/mo",price_monthly:33,rating:4.3,notes:"Single protein source. Minimal ingredients for sensitive cats. Good for food elimination trials."},
+  {id:34,brand:"Wellness",name:"Indoor Cat Health Chicken",origin:"USA",tier:"Mid-Range",protein:32,fat:12,carb_est:32,grain_free:false,main_protein:"Deboned Chicken, Chicken Meal, Brown Rice",life_stage:"Adult",special:["indoor","weight","hairball"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Indoor-specific formula with hairball control. Moderate calories. Includes probiotics."},
+  {id:35,brand:"Wellness",name:"Complete Health Senior Chicken",origin:"USA",tier:"Mid-Range",protein:28,fat:12,carb_est:34,grain_free:false,main_protein:"Deboned Chicken, Chicken Meal, Brown Rice",life_stage:"Senior",special:["senior"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Adjusted protein for older cats. Glucosamine for joint support. Antioxidants for immunity."},
+  // ===== INSTINCT (6) =====
+  {id:36,brand:"Instinct",name:"Raw Boost Grain-Free Chicken",origin:"USA",tier:"Premium",protein:42,fat:22,carb_est:16,grain_free:true,main_protein:"Chicken, Turkey, Menhaden Fish Meal",life_stage:"Adult",special:["grain_free","high_protein","pickyeater","raw_inspired"],price_range:"$35-50/mo",price_monthly:40,rating:4.7,notes:"Freeze-dried raw pieces mixed in. Great for picky eaters. Probiotics included. Very high protein."},
+  {id:37,brand:"Instinct",name:"Original Grain-Free Chicken",origin:"USA",tier:"Premium",protein:41,fat:21,carb_est:18,grain_free:true,main_protein:"Chicken, Turkey Meal, Menhaden Fish Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$30-45/mo",price_monthly:36,rating:4.5,notes:"72% animal ingredients. No grain, potato, corn, wheat, soy, by-product meals. Made in USA."},
+  {id:38,brand:"Instinct",name:"Limited Ingredient Diet Turkey",origin:"USA",tier:"Premium",protein:36,fat:17,carb_est:24,grain_free:true,main_protein:"Turkey, Turkey Meal, Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy"],price_range:"$35-48/mo",price_monthly:40,rating:4.4,notes:"Single protein source. Made for cats with food sensitivities. Also comes in duck and rabbit."},
+  {id:39,brand:"Instinct",name:"Raw Boost Grain-Free Kitten",origin:"USA",tier:"Premium",protein:42,fat:23,carb_est:15,grain_free:true,main_protein:"Chicken, Turkey, Menhaden Fish Meal",life_stage:"Kitten",special:["kitten","grain_free","high_protein"],price_range:"$38-52/mo",price_monthly:44,rating:4.6,notes:"Freeze-dried raw pieces for kittens. DHA for brain development. Very nutrient-dense."},
+  {id:40,brand:"Instinct",name:"Healthy Weight Grain-Free",origin:"USA",tier:"Premium",protein:38,fat:12,carb_est:26,grain_free:true,main_protein:"Chicken, Turkey Meal, Menhaden Fish Meal",life_stage:"Adult",special:["weight","grain_free"],price_range:"$30-44/mo",price_monthly:36,rating:4.2,notes:"Grain-free weight management. 25% fewer calories than Original. L-Carnitine for metabolism."},
+  {id:41,brand:"Instinct",name:"Ultimate Protein Grain-Free Chicken",origin:"USA",tier:"Premium",protein:47,fat:18,carb_est:14,grain_free:true,main_protein:"Chicken, Turkey Meal, Menhaden Fish Meal",life_stage:"Adult",special:["grain_free","high_protein","low_carb"],price_range:"$40-55/mo",price_monthly:46,rating:4.6,notes:"Highest protein Instinct line. 95% protein from animal sources. For very active cats."},
+  // ===== ORIJEN (3) =====
+  {id:42,brand:"Orijen",name:"Cat & Kitten",origin:"Canada",tier:"Premium",protein:40,fat:20,carb_est:18,grain_free:true,main_protein:"Chicken, Turkey, Whole Eggs, Fish",life_stage:"All Life Stages",special:["grain_free","high_protein"],price_range:"$35-50/mo",price_monthly:42,rating:4.8,notes:"Biologically appropriate. 85% animal ingredients. 2/3 fresh or raw. Top-tier nutrition."},
+  {id:43,brand:"Orijen",name:"Six Fish Cat",origin:"Canada",tier:"Premium",protein:40,fat:20,carb_est:18,grain_free:true,main_protein:"Mackerel, Herring, Flounder, Monkfish, Hake, Silver Hake",life_stage:"All Life Stages",special:["grain_free","high_protein","novel_protein","omega"],price_range:"$38-54/mo",price_monthly:45,rating:4.7,notes:"100% fish protein. Rich in omega-3 for coat health. Great for cats allergic to poultry."},
+  {id:44,brand:"Orijen",name:"Fit & Trim",origin:"Canada",tier:"Premium",protein:40,fat:13,carb_est:22,grain_free:true,main_protein:"Chicken, Turkey, Whole Eggs, Fish",life_stage:"Adult",special:["grain_free","high_protein","weight"],price_range:"$35-50/mo",price_monthly:42,rating:4.5,notes:"Same high protein as original but 25% less fat. For weight management without sacrificing nutrition."},
+  // ===== ACANA (3) =====
+  {id:45,brand:"Acana",name:"Meadowlands Cat",origin:"Canada",tier:"Premium",protein:35,fat:20,carb_est:22,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"All Life Stages",special:["grain_free"],price_range:"$30-45/mo",price_monthly:38,rating:4.6,notes:"70% animal ingredients. Slightly lower protein than Orijen. Good transition from high-protein brands."},
+  {id:46,brand:"Acana",name:"Indoor Entree Cat",origin:"Canada",tier:"Premium",protein:33,fat:14,carb_est:28,grain_free:true,main_protein:"Chicken, Turkey, Fish",life_stage:"Adult",special:["indoor","grain_free"],price_range:"$28-42/mo",price_monthly:34,rating:4.4,notes:"Lower calorie formula for indoor cats. 65% animal ingredients. Moderate protein for less active lifestyles."},
+  {id:47,brand:"Acana",name:"Bountiful Catch Cat",origin:"Canada",tier:"Premium",protein:37,fat:20,carb_est:20,grain_free:true,main_protein:"Salmon, Catfish, Herring",life_stage:"All Life Stages",special:["grain_free","high_protein","omega","novel_protein"],price_range:"$32-46/mo",price_monthly:38,rating:4.5,notes:"Fish-focused formula. Rich in EPA/DHA omega-3s. Great for coat health and anti-inflammatory needs."},
+  // ===== TIKI CAT (3) =====
+  {id:48,brand:"Tiki Cat",name:"Born Carnivore Chicken",origin:"USA",tier:"Premium",protein:43,fat:18,carb_est:15,grain_free:true,main_protein:"Chicken, Chicken Meal, Herring",life_stage:"Adult",special:["grain_free","high_protein","low_carb","weight"],price_range:"$28-40/mo",price_monthly:34,rating:4.5,notes:"Very high protein baked kibble. Low carb. Good for active cats and weight control."},
+  {id:49,brand:"Tiki Cat",name:"Aloha Friends Chicken (Wet)",origin:"USA",tier:"Premium",protein:50,fat:22,carb_est:10,grain_free:true,main_protein:"Chicken, Pumpkin, Sunflower Seed Oil",life_stage:"Adult",special:["grain_free","digestive","urinary"],price_range:"$35-50/mo",price_monthly:42,rating:4.6,notes:"High moisture wet food. Pumpkin for digestion. Excellent for cats that need more hydration."},
+  {id:50,brand:"Tiki Cat",name:"After Dark Chicken (Wet)",origin:"USA",tier:"Premium",protein:52,fat:18,carb_est:8,grain_free:true,main_protein:"Chicken, Chicken Liver, Chicken Gizzard",life_stage:"Adult",special:["grain_free","high_protein","low_carb"],price_range:"$38-55/mo",price_monthly:46,rating:4.7,notes:"Organ-rich formula mimicking natural prey. Extremely low carb. Premium moisture content."},
+  // ===== NULO (4) =====
+  {id:51,brand:"Nulo",name:"Freestyle Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:20,grain_free:true,main_protein:"Deboned Chicken, Turkey Meal, Salmon Meal",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$22-34/mo",price_monthly:27,rating:4.3,notes:"84% animal-based protein. Patented probiotic strain (BC30). Good value for grain-free."},
+  {id:52,brand:"Nulo",name:"Freestyle Indoor Cat",origin:"USA",tier:"Mid-Range",protein:36,fat:14,carb_est:26,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["indoor","grain_free","weight"],price_range:"$22-34/mo",price_monthly:27,rating:4.2,notes:"Lower calorie indoor formula. L-Carnitine for metabolism. Grain-free with moderate protein."},
+  {id:53,brand:"Nulo",name:"Freestyle Kitten Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:20,carb_est:18,grain_free:true,main_protein:"Deboned Chicken, Turkey Meal, Salmon Meal",life_stage:"Kitten",special:["kitten","grain_free"],price_range:"$24-36/mo",price_monthly:29,rating:4.4,notes:"High protein kitten food with DHA. Grain-free with 83% animal-based protein."},
+  {id:54,brand:"Nulo",name:"Freestyle Limited Ingredient Turkey",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:24,grain_free:true,main_protein:"Turkey, Turkey Meal, Yellow Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy"],price_range:"$26-38/mo",price_monthly:31,rating:4.2,notes:"Single animal protein. Limited ingredients for food sensitivities. No chicken for allergic cats."},
+  // ===== MERRICK (3) =====
+  {id:55,brand:"Merrick",name:"Purrfect Bistro Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:36,fat:16,carb_est:24,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["grain_free","hairball"],price_range:"$20-32/mo",price_monthly:25,rating:4.2,notes:"Deboned chicken first ingredient. Natural fiber for hairball control. Cooked in USA kitchens."},
+  {id:56,brand:"Merrick",name:"Purrfect Bistro Indoor",origin:"USA",tier:"Mid-Range",protein:33,fat:12,carb_est:30,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["indoor","weight","grain_free"],price_range:"$20-32/mo",price_monthly:25,rating:4.1,notes:"Reduced calorie formula for indoor cats. Grain-free. Includes taurine and probiotics."},
+  {id:57,brand:"Merrick",name:"Limited Ingredient Diet Turkey",origin:"USA",tier:"Mid-Range",protein:34,fat:14,carb_est:28,grain_free:true,main_protein:"Deboned Turkey, Turkey Meal, Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy"],price_range:"$24-36/mo",price_monthly:29,rating:4.2,notes:"Single source protein from turkey. No chicken ingredients. Good for cats with chicken allergies."},
+  // ===== NUTRO (3) =====
+  {id:58,brand:"Nutro",name:"Wholesome Essentials Chicken Adult",origin:"USA",tier:"Mid-Range",protein:33,fat:16,carb_est:28,grain_free:false,main_protein:"Chicken, Chicken Meal, Split Peas",life_stage:"Adult",special:["digestive"],price_range:"$18-28/mo",price_monthly:22,rating:4.1,notes:"Non-GMO ingredients. Good for sensitive stomachs. Contains rice. Simple, reliable nutrition."},
+  {id:59,brand:"Nutro",name:"Wholesome Essentials Indoor Chicken",origin:"USA",tier:"Mid-Range",protein:31,fat:12,carb_est:32,grain_free:false,main_protein:"Chicken, Chicken Meal, Brown Rice",life_stage:"Adult",special:["indoor","weight","hairball"],price_range:"$18-28/mo",price_monthly:22,rating:4.0,notes:"Lower calorie indoor formula. Natural fiber for hairball control. Non-GMO ingredients."},
+  {id:60,brand:"Nutro",name:"Max Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:38,fat:16,carb_est:24,grain_free:true,main_protein:"Chicken, Chicken Meal, Split Peas",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$20-32/mo",price_monthly:25,rating:4.1,notes:"Grain-free version. High protein with non-GMO claim. No artificial colors or preservatives."},
+  // ===== IAMS (3) =====
+  {id:61,brand:"Iams",name:"ProActive Health Adult Chicken",origin:"USA",tier:"Budget",protein:32,fat:15,carb_est:30,grain_free:false,main_protein:"Chicken, Chicken By-Product Meal",life_stage:"Adult",special:["weight","budget"],price_range:"$12-20/mo",price_monthly:15,rating:4.0,notes:"Good value. L-carnitine for weight. Prebiotics for digestion. Widely available in stores."},
+  {id:62,brand:"Iams",name:"ProActive Health Indoor Weight",origin:"USA",tier:"Budget",protein:30,fat:10,carb_est:35,grain_free:false,main_protein:"Chicken, Chicken By-Product Meal, Corn",life_stage:"Adult",special:["indoor","weight","budget"],price_range:"$12-20/mo",price_monthly:15,rating:3.9,notes:"Lowest calorie Iams option. For indoor cats prone to weight gain. L-carnitine for fat metabolism."},
+  {id:63,brand:"Iams",name:"ProActive Health Kitten",origin:"USA",tier:"Budget",protein:35,fat:18,carb_est:26,grain_free:false,main_protein:"Chicken, Chicken By-Product Meal",life_stage:"Kitten",special:["kitten","budget"],price_range:"$12-20/mo",price_monthly:15,rating:4.1,notes:"Affordable kitten nutrition. DHA for brain development. Chicken first ingredient."},
+  // ===== RACHAEL RAY NUTRISH (2) =====
+  {id:64,brand:"Rachael Ray Nutrish",name:"Indoor Complete Chicken",origin:"USA",tier:"Budget",protein:30,fat:14,carb_est:32,grain_free:false,main_protein:"Chicken, Chicken Meal, Brown Rice",life_stage:"Adult",special:["indoor","budget"],price_range:"$14-22/mo",price_monthly:17,rating:3.9,notes:"No poultry by-product meal. Added vitamins & minerals. Simple ingredient list. Good budget choice."},
+  {id:65,brand:"Rachael Ray Nutrish",name:"Zero Grain Chicken",origin:"USA",tier:"Mid-Range",protein:38,fat:16,carb_est:24,grain_free:true,main_protein:"Chicken, Chicken Meal, Peas",life_stage:"Adult",special:["grain_free","budget"],price_range:"$18-28/mo",price_monthly:22,rating:4.0,notes:"Grain-free at budget-friendly price. No chicken by-product meal. Includes taurine."},
+  // ===== AMERICAN JOURNEY (3) =====
+  {id:66,brand:"American Journey",name:"Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:20,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["grain_free","high_protein","budget"],price_range:"$18-28/mo",price_monthly:22,rating:4.2,notes:"Chewy exclusive brand. High protein at lower price. Good value grain-free option."},
+  {id:67,brand:"American Journey",name:"Indoor Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:35,fat:12,carb_est:28,grain_free:true,main_protein:"Deboned Chicken, Chicken Meal, Turkey Meal",life_stage:"Adult",special:["indoor","grain_free","weight"],price_range:"$18-28/mo",price_monthly:22,rating:4.1,notes:"Lower calorie for indoor cats. Grain-free. Fiber blend for hairball control. Chewy exclusive."},
+  {id:68,brand:"American Journey",name:"Limited Ingredient Salmon",origin:"USA",tier:"Mid-Range",protein:34,fat:14,carb_est:28,grain_free:true,main_protein:"Salmon, Salmon Meal, Peas",life_stage:"Adult",special:["limited_ingredient","grain_free","allergy","budget"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Single protein source at affordable price. Good for cats with chicken or poultry allergies."},
+  // ===== KIRKLAND SIGNATURE (2) =====
+  {id:69,brand:"Kirkland Signature",name:"Super Premium Adult Chicken",origin:"USA",tier:"Budget",protein:30,fat:12,carb_est:33,grain_free:false,main_protein:"Chicken, Chicken Meal, Brown Rice",life_stage:"Adult",special:["budget"],price_range:"$8-14/mo",price_monthly:10,rating:3.8,notes:"Costco brand. Made by Diamond Pet Foods. Good basic nutrition at lowest price point."},
+  {id:70,brand:"Kirkland Signature",name:"Nature's Domain Turkey",origin:"USA",tier:"Budget",protein:34,fat:14,carb_est:28,grain_free:true,main_protein:"Turkey, Turkey Meal, Peas",life_stage:"Adult",special:["grain_free","budget"],price_range:"$10-16/mo",price_monthly:12,rating:3.9,notes:"Costco grain-free option. Surprisingly good ingredients for the price. Made by Diamond."},
+  // ===== TASTE OF THE WILD (2) =====
+  {id:71,brand:"Taste of the Wild",name:"Rocky Mountain Feline (Salmon)",origin:"USA",tier:"Mid-Range",protein:42,fat:18,carb_est:20,grain_free:true,main_protein:"Salmon, Chicken Meal, Sweet Potatoes",life_stage:"All Life Stages",special:["grain_free","high_protein","novel_protein"],price_range:"$22-34/mo",price_monthly:27,rating:4.3,notes:"Roasted salmon + venison. Species-appropriate protein sources. Good for cats bored with chicken."},
+  {id:72,brand:"Taste of the Wild",name:"Canyon River Feline (Trout)",origin:"USA",tier:"Mid-Range",protein:42,fat:18,carb_est:20,grain_free:true,main_protein:"Trout, Salmon Meal, Sweet Potatoes",life_stage:"All Life Stages",special:["grain_free","high_protein","novel_protein","omega"],price_range:"$22-34/mo",price_monthly:27,rating:4.3,notes:"Fish-based with trout + smoked salmon. Rich in omega-3s. Good for cats with poultry allergies."},
+  // ===== WHOLE EARTH FARMS (1) =====
+  {id:73,brand:"Whole Earth Farms",name:"Grain-Free Chicken",origin:"USA",tier:"Budget",protein:36,fat:14,carb_est:26,grain_free:true,main_protein:"Chicken, Chicken Meal, Peas",life_stage:"Adult",special:["grain_free","budget"],price_range:"$12-20/mo",price_monthly:15,rating:3.8,notes:"Organic-leaning brand at budget price. Grain-free. Made in USA. Good middle-ground option."},
+  // ===== WERUVA (1) =====
+  {id:74,brand:"Weruva",name:"Cats in the Kitchen Pumpkin (Wet)",origin:"USA",tier:"Premium",protein:55,fat:20,carb_est:8,grain_free:true,main_protein:"Chicken, Pumpkin, Chicken Broth",life_stage:"Adult",special:["grain_free","digestive","weight","urinary"],price_range:"$40-60/mo",price_monthly:48,rating:4.7,notes:"High moisture (78%). Human-grade ingredients. Pumpkin aids digestion. Excellent for urinary health."},
+  // ===== FARMINA N&D (3) =====
+  {id:75,brand:"Farmina N&D",name:"Quinoa Skin & Coat (Quail)",origin:"Italy",tier:"Premium",protein:42,fat:20,carb_est:18,grain_free:false,main_protein:"Quail, Quail Meal, Quinoa",life_stage:"Adult",special:["allergy","novel_protein","omega"],price_range:"$35-50/mo",price_monthly:42,rating:4.6,notes:"Novel protein (quail) for allergy-prone cats. Low-glycemic quinoa instead of rice. Italian-made."},
+  {id:76,brand:"Farmina N&D",name:"Ocean Herring & Orange",origin:"Italy",tier:"Premium",protein:44,fat:20,carb_est:16,grain_free:true,main_protein:"Herring, Herring Meal, Peas",life_stage:"Adult",special:["grain_free","high_protein","omega","novel_protein"],price_range:"$38-52/mo",price_monthly:44,rating:4.6,notes:"Fish-focused with herring. Very high omega-3 for coat health. Grain-free. Italian quality standards."},
+  {id:77,brand:"Farmina N&D",name:"Prime Chicken & Pomegranate",origin:"Italy",tier:"Premium",protein:44,fat:20,carb_est:16,grain_free:true,main_protein:"Chicken, Chicken Meal, Peas",life_stage:"Adult",special:["grain_free","high_protein","low_carb"],price_range:"$38-52/mo",price_monthly:44,rating:4.7,notes:"98% animal protein sources. Very low glycemic index. No grains, no potatoes. Premium Italian quality."},
+  // ===== SOLID GOLD (2) =====
+  {id:78,brand:"Solid Gold",name:"Indigo Moon Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:38,fat:16,carb_est:24,grain_free:true,main_protein:"Chicken, Chicken Meal, Peas",life_stage:"Adult",special:["grain_free","digestive"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Grain-free with probiotics. Founded 1974, one of original holistic pet food brands. Good value."},
+  {id:79,brand:"Solid Gold",name:"Fit as a Fiddle",origin:"USA",tier:"Mid-Range",protein:33,fat:12,carb_est:30,grain_free:false,main_protein:"Alaskan Pollock, Ocean Fish Meal, Brown Rice",life_stage:"Adult",special:["weight","digestive"],price_range:"$18-28/mo",price_monthly:22,rating:4.0,notes:"Fish-based formula. Lower calories for weight management. Includes 20 superfoods. Good for mild sensitivities."},
+  // ===== CRAVE (2) =====
+  {id:80,brand:"Crave",name:"Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:20,grain_free:true,main_protein:"Chicken, Chicken Meal, Split Peas",life_stage:"Adult",special:["grain_free","high_protein"],price_range:"$20-30/mo",price_monthly:24,rating:4.2,notes:"Mars Petcare brand. Inspired by ancestral diet. No grains, no chicken by-product meal. Widely available."},
+  {id:81,brand:"Crave",name:"Grain-Free Salmon & Ocean Fish",origin:"USA",tier:"Mid-Range",protein:40,fat:18,carb_est:20,grain_free:true,main_protein:"Salmon, Ocean Fish Meal, Split Peas",life_stage:"Adult",special:["grain_free","high_protein","omega","novel_protein"],price_range:"$22-32/mo",price_monthly:26,rating:4.2,notes:"Fish-based grain-free option. Rich in omega-3s. Good for cats with poultry sensitivities."},
+  // ===== DR. ELSEY'S (1) =====
+  {id:82,brand:"Dr. Elsey's",name:"Clean Protein Chicken",origin:"USA",tier:"Premium",protein:50,fat:18,carb_est:8,grain_free:true,main_protein:"Chicken, Dried Egg, Pork Protein Isolate",life_stage:"Adult",special:["grain_free","high_protein","low_carb","diabetes"],price_range:"$35-50/mo",price_monthly:42,rating:4.5,notes:"Lowest carb kibble available (~8%). Ideal for diabetic cats. 90% animal protein. Very high protein."},
+  // ===== EARTHBORN HOLISTIC (2) =====
+  {id:83,brand:"Earthborn Holistic",name:"Holistic Feline Blend",origin:"USA",tier:"Mid-Range",protein:35,fat:14,carb_est:28,grain_free:true,main_protein:"Turkey, Chicken Meal, Peas",life_stage:"All Life Stages",special:["grain_free","digestive"],price_range:"$20-30/mo",price_monthly:24,rating:4.1,notes:"Grain-free holistic formula. Probiotics for digestive health. Family-owned company. Good all-around choice."},
+  {id:84,brand:"Earthborn Holistic",name:"Moisture Meatballs (Wet)",origin:"USA",tier:"Mid-Range",protein:45,fat:20,carb_est:12,grain_free:true,main_protein:"Chicken, Chicken Broth, Turkey Liver",life_stage:"All Life Stages",special:["grain_free","digestive","urinary"],price_range:"$30-45/mo",price_monthly:36,rating:4.3,notes:"Meatball-shaped wet food. High moisture for urinary health. Fun texture cats enjoy."},
+  // ===== CANIDAE (3) =====
+  {id:85,brand:"Canidae",name:"PURE Grain-Free Indoor",origin:"USA",tier:"Mid-Range",protein:35,fat:12,carb_est:28,grain_free:true,main_protein:"Chicken, Chicken Meal, Peas",life_stage:"Adult",special:["indoor","grain_free","weight"],price_range:"$20-30/mo",price_monthly:24,rating:4.0,notes:"Limited ingredient indoor formula. Grain-free. Probiotics added after cooking for gut health."},
+  {id:86,brand:"Canidae",name:"PURE Salmon Grain-Free",origin:"USA",tier:"Mid-Range",protein:34,fat:14,carb_est:28,grain_free:true,main_protein:"Salmon, Salmon Meal, Peas",life_stage:"Adult",special:["grain_free","limited_ingredient","allergy","omega"],price_range:"$22-34/mo",price_monthly:27,rating:4.2,notes:"Single protein source from salmon. Limited ingredients. Good for cats with poultry allergies."},
+  {id:87,brand:"Canidae",name:"All Life Stages Chicken",origin:"USA",tier:"Budget",protein:32,fat:14,carb_est:30,grain_free:false,main_protein:"Chicken, Chicken Meal, Brown Rice",life_stage:"All Life Stages",special:["budget"],price_range:"$14-22/mo",price_monthly:17,rating:3.9,notes:"With-grain budget option. Multi-cat formula for all ages. Contains probiotics and omega fatty acids."},
+  // ===== HALO (2) =====
+  {id:88,brand:"Halo",name:"Holistic Garden Chicken",origin:"USA",tier:"Mid-Range",protein:33,fat:14,carb_est:28,grain_free:false,main_protein:"Whole Chicken (not meal), Whole Eggs, Oats",life_stage:"Adult",special:["digestive"],price_range:"$22-32/mo",price_monthly:26,rating:4.1,notes:"Uses whole chicken (not rendered meal). Claims higher bioavailability. Good for cats with sensitive digestion."},
+  {id:89,brand:"Halo",name:"Holistic Grain-Free Chicken",origin:"USA",tier:"Mid-Range",protein:35,fat:14,carb_est:26,grain_free:true,main_protein:"Whole Chicken, Chicken Liver, Whole Eggs",life_stage:"Adult",special:["grain_free","digestive"],price_range:"$24-36/mo",price_monthly:29,rating:4.1,notes:"Grain-free version with whole chicken. No rendered meals. Includes whole eggs for added nutrition."}
 ];
 
 // ===== STATE =====
@@ -407,12 +689,20 @@ function switchTab(tab) {
 }
 
 // ===== QUIZ SUBMISSION =====
+function collectCheckboxGroup(groupId) {
+  const vals = [];
+  document.querySelectorAll('#' + groupId + ' input[type=checkbox]:checked').forEach(cb => {
+    vals.push(cb.value);
+  });
+  return vals;
+}
+
 function submitQuiz() {
   const catName = document.getElementById('catName').value.trim();
-  const catAge = document.getElementById('catAge').value.trim();
-  const email = document.getElementById('email').value.trim();
+  const catAge = document.getElementById('catAge').value;
+  const quizEmail = document.getElementById('quizEmail').value.trim();
   
-  if (!catName || !catAge || !email) {
+  if (!catName || !catAge || !quizEmail) {
     alert('Please fill in at least: Cat Name, Age, and Email.');
     return;
   }
@@ -421,24 +711,34 @@ function submitQuiz() {
   const orderId = 'CMF-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(orderIdCounter).padStart(3,'0');
   localStorage.setItem('cfm_counter', orderIdCounter);
   
-  const healthChecks = [];
-  document.querySelectorAll('#panel-quiz input[type=checkbox]:checked').forEach(cb => {
-    if (cb.value !== 'none_health') healthChecks.push(cb.value);
-  });
+  const symptoms = collectCheckboxGroup('symptomsGroup');
+  const conditions = collectCheckboxGroup('conditionsGroup');
+  const specialDiet = collectCheckboxGroup('specialDietGroup');
+  const notWorking = collectCheckboxGroup('notWorkingGroup');
+  const shopWhere = collectCheckboxGroup('shopWhereGroup');
   
   currentOrder = {
     orderId,
-    catName, catAge,
+    catName,
+    catAge,
     catWeight: document.getElementById('catWeight').value.trim(),
+    bodyCondition: document.getElementById('bodyCondition').value,
     catBreed: document.getElementById('catBreed').value,
-    catFixed: document.getElementById('catFixed').value,
-    currentFood: document.getElementById('currentFood').value.trim(),
-    foodType: document.getElementById('foodType').value,
-    feedingFreq: document.getElementById('feedingFreq').value,
-    healthChecks,
-    extraNotes: document.getElementById('extraNotes').value.trim(),
+    catLifestyle: document.getElementById('catLifestyle').value,
+    reasonForNew: document.getElementById('reasonForNew').value,
+    symptoms,
+    conditions,
+    specialDiet,
+    currentBrand: document.getElementById('currentBrand').value.trim(),
+    currentProduct: document.getElementById('currentProduct').value.trim(),
+    notWorking,
+    foodsTried: document.getElementById('foodsTried').value.trim(),
+    foodsTriedResult: document.getElementById('foodsTriedResult').value.trim(),
+    foodTypePref: document.getElementById('foodTypePref').value,
     budget: document.getElementById('budget').value,
-    email,
+    ingredientPhilosophy: document.getElementById('ingredientPhilosophy').value,
+    shopWhere,
+    email: quizEmail,
     tier: selectedTier,
     amount: selectedTier === 'pro' ? 29 : 19,
     status: 'unpaid',
@@ -525,7 +825,7 @@ function handlePaddleSuccess() {
           <div><label>Breed</label><input type="text" id="fbBreed" value="${currentOrder.catBreed || ''}" readonly></div>
         </div>
         <label>Current food</label>
-        <input type="text" id="fbCurrentFood" value="${currentOrder.currentFood || ''}" readonly>
+        <input type="text" id="fbCurrentFood" value="${currentOrder.currentBrand || ''} ${currentOrder.currentProduct || ''}" readonly>
         
         <h3>How likely are you to recommend us?</h3>
         <div class="rating-group" id="ratingGroup">
@@ -630,24 +930,26 @@ function renderKB() {
     if (special === 'grain_free') filtered = filtered.filter(f => f.grain_free);
     else filtered = filtered.filter(f => f.special.includes(special));
   }
-  if (search) filtered = filtered.filter(f => f.name.toLowerCase().includes(search));
+  if (search) filtered = filtered.filter(f => (f.brand + ' ' + f.name).toLowerCase().includes(search));
   
   const html = filtered.map(f => `
     <div class="kb-card">
-      <div class="brand-name">${f.name} <span class="brand-origin">· ${f.origin} · ${f.tier}</span></div>
+      <div class="brand-name">${f.brand} <span style="color:#999;font-weight:400">—</span> ${f.name}</div>
+      <div class="brand-origin">${f.origin} · ${f.tier} · ${f.life_stage}</div>
       <div class="brand-detail">
         <span>Protein <b>${f.protein}%</b></span>
         <span>Fat <b>${f.fat}%</b></span>
         <span>Carbs ~<b>${f.carb_est}%</b></span>
-        <span>${f.grain_free ? '✅ Grain-Free' : 'Contains Grains'}</span>
+        <span>${f.grain_free ? 'Grain-Free' : 'Grains'}</span>
       </div>
-      <div class="brand-price">💰 ~$${f.price_monthly}/month</div>
+      <div style="margin-top:6px">${f.special.map(s => '<span style="display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#e8f5e9;color:#2e7d32;margin:1px 2px">'+s+'</span>').join('')}</div>
+      <div class="brand-price">~$${f.price_monthly}/month</div>
       <div class="brand-note">${f.notes}</div>
-      <div style="font-size:10px;color:#aaa;margin-top:4px">Life Stage: ${f.life_stage} · Protein: ${f.main_protein}</div>
+      <div style="font-size:10px;color:#aaa;margin-top:4px">Protein: ${f.main_protein}</div>
     </div>
   `).join('');
   
-  document.getElementById('kbResults').innerHTML = html || '<p style="color:#999;text-align:center;padding:20px">No brands match your filters.</p>';
+  document.getElementById('kbResults').innerHTML = html || '<p style="color:#999;text-align:center;padding:20px">No products match your filters.</p>';
 }
 
 // ===== ORDERS =====
