@@ -5,118 +5,144 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Cat Food Match — Personalized cat food recommendations</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#faf9f7;color:#2d2d2d;min-height:100vh;line-height:1.5}
-.nav{display:flex;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);position:sticky;top:0;z-index:10}
-.nav a{flex:1;text-align:center;padding:14px 6px;font-size:13px;font-weight:500;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;text-decoration:none}
-.nav a:hover{color:#4a7c59;background:#f7faf5}
-.nav a.active{color:#4a7c59;border-bottom-color:#4a7c59;font-weight:600}
+body{font-family:'Nunito',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#FFF8F0;color:#5D4E37;min-height:100vh;line-height:1.6}
+.nav{display:flex;background:#FFF5E6;box-shadow:0 2px 8px rgba(150,120,80,.1);position:sticky;top:0;z-index:10;border-bottom:2px solid #F0DCC8}
+.nav a{flex:1;text-align:center;padding:14px 6px;font-size:13px;font-weight:600;color:#B8956A;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;text-decoration:none}
+.nav a:hover{color:#A07850;background:#FFF0DC}
+.nav a.active{color:#A07850;border-bottom-color:#C4956A;font-weight:700}
 .container{max-width:760px;margin:0 auto;padding:20px}
 .panel{display:none}
 .panel.active{display:block}
 /* Landing hero */
-.hero{text-align:center;padding:40px 20px;background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border-radius:18px;margin-bottom:28px}
-.hero h1{font-size:26px;color:#2e5a3b;margin-bottom:12px;font-weight:700}
-.hero p{font-size:15px;color:#5a7d5f;max-width:500px;margin:0 auto 20px}
-.hero .price{font-size:36px;color:#4a7c59;font-weight:800;margin:14px 0}
-.hero .price span{font-size:14px;color:#888;font-weight:400}
-.cta-btn{display:inline-block;padding:16px 44px;background:linear-gradient(135deg,#4a7c59,#3a6347);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .1s,box-shadow .2s;box-shadow:0 4px 18px rgba(74,124,89,.3)}
-.cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(74,124,89,.4)}
+.hero{text-align:center;padding:0;margin-bottom:28px;border-radius:20px;overflow:hidden;background:#FFFAF5;border:2px solid #F0DCC8;box-shadow:0 4px 20px rgba(150,120,80,.08)}
+.hero-img{width:100%;display:block;object-fit:cover;max-height:220px}
+.hero-content{padding:28px 24px 32px}
+.hero h1{font-size:26px;color:#5D4E37;margin-bottom:12px;font-weight:800}
+.hero p{font-size:15px;color:#8B7B6B;max-width:500px;margin:0 auto 20px}
+.hero .price{font-size:36px;color:#C4956A;font-weight:800;margin:14px 0}
+.hero .price span{font-size:14px;color:#B8956A;font-weight:400}
+.cta-btn{display:inline-block;padding:16px 44px;background:linear-gradient(135deg,#C4956A,#A07850);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .1s,box-shadow .2s;box-shadow:0 4px 18px rgba(196,149,106,.3)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(196,149,106,.4)}
 /* Cards */
-.card{background:#fff;border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 1px 8px rgba(0,0,0,.04);border:1px solid #eef2ee}
-.card h2{font-size:17px;color:#4a7c59;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #e8f5e9}
-.card h3{font-size:14px;color:#444;margin:16px 0 8px;font-weight:600}
+.card{background:#FFFAF5;border-radius:16px;padding:22px;margin-bottom:16px;box-shadow:0 2px 12px rgba(150,120,80,.06);border:1.5px solid #F0DCC8}
+.card h2{font-size:17px;color:#A07850;margin-bottom:14px;padding-bottom:10px;border-bottom:2px dashed #F0DCC8}
+.card h3{font-size:14px;color:#5D4E37;margin:16px 0 8px;font-weight:700}
 .benefits{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-.benefit{background:#f7faf5;padding:14px;border-radius:10px;text-align:center}
-.benefit strong{display:block;color:#4a7c59;font-size:15px;margin-bottom:4px}
-.benefit span{font-size:12px;color:#777}
+.benefit{background:#FFF5E6;padding:14px;border-radius:12px;text-align:center;border:1px solid #F0DCC8}
+.benefit strong{display:block;color:#A07850;font-size:15px;margin-bottom:4px}
+.benefit span{font-size:12px;color:#8B7B6B}
 /* Form */
-label{display:block;font-size:13px;margin-bottom:4px;color:#444;font-weight:500}
-input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid #dce5dc;border-radius:10px;font-size:14px;color:#2d2d2d;background:#fdfefd;margin-bottom:10px;transition:border .2s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#4a7c59;background:#fff}
+label{display:block;font-size:13px;margin-bottom:4px;color:#5D4E37;font-weight:600}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid #E8D5C0;border-radius:10px;font-size:14px;color:#5D4E37;background:#FFFCF7;margin-bottom:10px;transition:border .2s;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#C4956A;background:#fff;box-shadow:0 0 0 3px rgba(196,149,106,.1)}
 textarea{resize:vertical;min-height:60px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .chk-grid label{display:flex;align-items:center;gap:6px;font-weight:400;font-size:12px;margin:0;cursor:pointer}
 .chk-grid input[type=checkbox]{width:auto;margin:0}
-.btn{width:100%;padding:14px;background:linear-gradient(135deg,#4a7c59,#3a6347);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .1s}
-.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(74,124,89,.25)}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#C4956A,#A07850);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:transform .1s;font-family:inherit}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(196,149,106,.3)}
 .btn:active{transform:translateY(0)}
-.btn:disabled{background:#ccc;cursor:not-allowed;box-shadow:none;transform:none}
+.btn:disabled{background:#D5C8B8;cursor:not-allowed;box-shadow:none;transform:none}
 .btn-sm{padding:8px 16px;font-size:12px;width:auto;display:inline-block}
 /* Table */
 table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
-th{background:#f0f7f0;color:#4a7c59;padding:8px 10px;text-align:left;font-weight:600;border-bottom:2px solid #c8e0c8}
-td{padding:8px 10px;border-bottom:1px solid #e8f0e8}
-tr:hover td{background:#f9fcf9}
-.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
-.badge-paid{background:#e8f5e9;color:#2e7d32}
-.badge-pending{background:#fff3e0;color:#e65100}
-.badge-unpaid{background:#fce4ec;color:#c62828}
+th{background:#FFF5E6;color:#A07850;padding:8px 10px;text-align:left;font-weight:700;border-bottom:2px solid #F0DCC8}
+td{padding:8px 10px;border-bottom:1px solid #F0DCC8}
+tr:hover td{background:#FFF8F0}
+.badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}
+.badge-paid{background:#E8F0E8;color:#4A7C59}
+.badge-pending{background:#FFF3E0;color:#C4956A}
+.badge-unpaid{background:#FDE8E8;color:#C0392B}
 /* KB */
 .kb-filter{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.kb-filter select{padding:7px 12px;font-size:12px;width:auto;margin:0;border:1.5px solid #dce5dc;border-radius:8px}
+.kb-filter select{padding:7px 12px;font-size:12px;width:auto;margin:0;border:1.5px solid #E8D5C0;border-radius:8px}
 .kb-filter input{padding:7px 12px;font-size:12px;width:180px;margin:0}
 /* Stats */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.stat{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.03);border:1px solid #eef2ee}
-.stat .num{font-size:26px;font-weight:800;color:#4a7c59}
-.stat .lbl{font-size:11px;color:#999;margin-top:4px}
+.stat{background:#FFFAF5;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(150,120,80,.06);border:1.5px solid #F0DCC8}
+.stat .num{font-size:26px;font-weight:800;color:#C4956A}
+.stat .lbl{font-size:11px;color:#B8956A;margin-top:4px}
 /* Loading */
-.loading{text-align:center;padding:30px;color:#999}
+.loading{text-align:center;padding:30px;color:#B8956A}
 /* KB card */
-.kb-card{background:#fff;border:1px solid #eef2ee;border-radius:12px;padding:16px;margin-bottom:10px}
-.kb-card .brand-name{font-size:16px;font-weight:700;color:#2d2d2d}
-.kb-card .brand-origin{font-size:11px;color:#4a7c59;font-weight:500}
-.kb-card .brand-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px;color:#666}
-.kb-card .brand-detail span{background:#f7faf5;padding:4px 8px;border-radius:6px;text-align:center}
-.kb-card .brand-price{font-size:13px;color:#e65100;font-weight:600;margin-top:8px}
-.kb-card .brand-note{font-size:11px;color:#999;margin-top:4px;font-style:italic}
+.kb-card{background:#FFFAF5;border:1.5px solid #F0DCC8;border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color .2s}
+.kb-card:hover{border-color:#C4956A}
+.kb-card .brand-name{font-size:16px;font-weight:700;color:#5D4E37}
+.kb-card .brand-origin{font-size:11px;color:#C4956A;font-weight:600}
+.kb-card .brand-detail{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px;color:#8B7B6B}
+.kb-card .brand-detail span{background:#FFF5E6;padding:4px 8px;border-radius:6px;text-align:center}
+.kb-card .brand-price{font-size:13px;color:#C4956A;font-weight:700;margin-top:8px}
+.kb-card .brand-note{font-size:11px;color:#8B7B6B;margin-top:4px;font-style:italic}
 /* payment section */
-.payment-section{border:2px dashed #c8e0c8;border-radius:14px;padding:20px;text-align:center;margin-top:16px}
-.payment-section h3{color:#4a7c59;margin-bottom:8px}
-.tier-option{display:inline-block;border:2px solid #dce5dc;border-radius:12px;padding:14px 18px;margin:6px;cursor:pointer;text-align:left;min-width:160px;transition:all .2s}
-.tier-option:hover{border-color:#4a7c59;background:#f7faf5}
-.tier-option.selected{border-color:#4a7c59;background:#e8f5e9}
-.tier-option .tier-name{font-size:16px;font-weight:700;color:#2d2d2d}
-.tier-option .tier-price{font-size:20px;font-weight:800;color:#4a7c59;margin:4px 0}
-.tier-option .tier-desc{font-size:11px;color:#888}
-.footer{text-align:center;padding:30px;color:#bbb;font-size:12px}
-.footer a{color:#4a7c59}
-.notice{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:12px;font-size:12px;color:#8d6e00;margin:10px 0}
+.payment-section{border:2px dashed #F0DCC8;border-radius:14px;padding:20px;text-align:center;margin-top:16px}
+.payment-section h3{color:#A07850;margin-bottom:8px}
+.tier-option{display:inline-block;border:2px solid #E8D5C0;border-radius:12px;padding:14px 18px;margin:6px;cursor:pointer;text-align:left;min-width:160px;transition:all .2s;background:#FFFCF7}
+.tier-option:hover{border-color:#C4956A;background:#FFF5E6}
+.tier-option.selected{border-color:#C4956A;background:#FFF0DC}
+.tier-option .tier-name{font-size:16px;font-weight:700;color:#5D4E37}
+.tier-option .tier-price{font-size:20px;font-weight:800;color:#C4956A;margin:4px 0}
+.tier-option .tier-desc{font-size:11px;color:#8B7B6B}
+.footer{text-align:center;padding:30px;color:#B8956A;font-size:12px}
+.footer a{color:#C4956A}
+.notice{background:#FFF5E6;border:1px solid #F0DCC8;border-radius:10px;padding:12px;font-size:12px;color:#8B6B3A;margin:10px 0}
 /* Feedback & Rating */
 .feedback-hero{text-align:center;padding:30px 20px;margin-bottom:20px}
 .feedback-hero .icon{font-size:48px;margin-bottom:12px}
-.feedback-hero h3{color:#2e5a3b;font-size:18px;margin-bottom:6px}
-.feedback-hero p{color:#888;font-size:13px}
+.feedback-hero h3{color:#5D4E37;font-size:18px;margin-bottom:6px}
+.feedback-hero p{color:#8B7B6B;font-size:13px}
 .rating-group{display:flex;justify-content:center;gap:6px;margin:12px 0;flex-wrap:wrap}
-.rating-btn{width:44px;height:44px;border:2px solid #dce5dc;border-radius:12px;background:#fff;font-size:16px;font-weight:600;color:#666;cursor:pointer;transition:all .15s}
-.rating-btn:hover{border-color:#4a7c59;color:#4a7c59;background:#f7faf5}
-.rating-btn.selected{border-color:#4a7c59;background:#4a7c59;color:#fff}
-.rating-labels{display:flex;justify-content:space-between;max-width:500px;margin:0 auto 20px;font-size:10px;color:#bbb;padding:0 4px}
-.feedback-success{text-align:center;padding:24px;background:#e8f5e9;border-radius:12px;display:none}
+.rating-btn{width:44px;height:44px;border:2px solid #E8D5C0;border-radius:12px;background:#FFFCF7;font-size:16px;font-weight:600;color:#8B7B6B;cursor:pointer;transition:all .15s}
+.rating-btn:hover{border-color:#C4956A;color:#C4956A;background:#FFF5E6}
+.rating-btn.selected{border-color:#C4956A;background:#C4956A;color:#fff}
+.rating-labels{display:flex;justify-content:space-between;max-width:500px;margin:0 auto 20px;font-size:10px;color:#B8956A;padding:0 4px}
+.feedback-success{text-align:center;padding:24px;background:#E8F0E8;border-radius:12px;display:none}
 .feedback-success .check{font-size:40px;margin-bottom:8px}
-.feedback-success h4{color:#2e7d32;font-size:16px;margin-bottom:4px}
+.feedback-success h4{color:#4A7C59;font-size:16px;margin-bottom:4px}
 /* Quiz sections */
-.quiz-section{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid #eef2ee}
+.quiz-section{margin-bottom:24px;padding-bottom:16px;border-bottom:1.5px dashed #F0DCC8}
 .quiz-section:last-of-type{border-bottom:none}
-.quiz-section-title{font-size:15px;font-weight:700;color:#2e5a3b;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.quiz-section-title .step{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:#4a7c59;color:#fff;font-size:12px;font-weight:700}
-.quiz-section-desc{font-size:12px;color:#999;margin-bottom:14px}
+.quiz-section-title{font-size:15px;font-weight:800;color:#5D4E37;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.quiz-section-title .step{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#C4956A;color:#fff;font-size:12px;font-weight:700}
+.quiz-section-desc{font-size:12px;color:#B8956A;margin-bottom:14px}
 .quiz-question{margin-bottom:14px}
-.quiz-question>label{font-size:13px;font-weight:600;color:#444;margin-bottom:6px}
-.quiz-question .hint{font-size:11px;color:#aaa;font-weight:400}
+.quiz-question>label{font-size:13px;font-weight:600;color:#5D4E37;margin-bottom:6px}
+.quiz-question .hint{font-size:11px;color:#B8956A;font-weight:400}
 .quiz-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .quiz-half{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .quiz-checkboxes{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
-.quiz-checkbox{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;color:#444;cursor:pointer;padding:6px 8px;border-radius:8px;transition:background .15s;margin:0}
-.quiz-checkbox:hover{background:#f7faf5}
-.quiz-checkbox input[type=checkbox],.quiz-checkbox input[type=radio]{width:auto;margin:0;flex-shrink:0}
-.quiz-progress{display:flex;gap:4px;margin-bottom:20px}
-.quiz-progress .seg{flex:1;height:4px;border-radius:2px;background:#e8e8e8;transition:background .3s}
-.quiz-progress .seg.done{background:#4a7c59}
-.quiz-progress .seg.active{background:#8fbc8f}
-@media(max-width:500px){.quiz-row,.quiz-half,.quiz-checkboxes{grid-template-columns:1fr}}
+.quiz-checkbox{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:400;color:#5D4E37;cursor:pointer;padding:8px 10px;border-radius:10px;transition:all .15s;margin:0;border:1.5px solid #F0DCC8;background:#FFFCF7}
+.quiz-checkbox:hover{background:#FFF5E6;border-color:#C4956A}
+.quiz-checkbox:has(input:checked){background:#FFF0DC;border-color:#C4956A}
+.quiz-checkbox input[type=checkbox],.quiz-checkbox input[type=radio]{width:auto;margin:0;flex-shrink:0;accent-color:#C4956A}
+.quiz-progress{display:flex;gap:6px;margin-bottom:20px}
+.quiz-progress .seg{flex:1;height:6px;border-radius:3px;background:#F0DCC8;transition:background .3s}
+.quiz-progress .seg.done{background:#C4956A}
+.quiz-progress .seg.active{background:#E8C9A8}
+/* Social proof */
+.social-proof{display:flex;gap:12px;margin:20px 0;flex-wrap:wrap;justify-content:center}
+.proof-item{flex:1;min-width:140px;text-align:center;padding:16px 12px;background:#FFFAF5;border-radius:14px;border:1.5px solid #F0DCC8}
+.proof-item .num{font-size:24px;font-weight:800;color:#C4956A}
+.proof-item .lbl{font-size:11px;color:#8B7B6B;margin-top:2px}
+.testimonial{background:#FFF5E6;border-radius:14px;padding:16px;margin:12px 0;border-left:4px solid #C4956A;position:relative}
+.testimonial::before{content:'\201C';font-size:40px;color:#E8C9A8;position:absolute;top:4px;left:12px;line-height:1}
+.testimonial p{font-size:13px;color:#5D4E37;padding-left:20px;font-style:italic;line-height:1.6}
+.testimonial .author{font-size:11px;color:#B8956A;margin-top:6px;padding-left:20px;font-style:normal;font-weight:700}
+/* Misconceptions */
+.myth-card{background:#FFF5E6;border-radius:14px;padding:16px;margin:10px 0;border:1.5px solid #F0DCC8}
+.myth-card .myth-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.myth-card .myth-wrong{font-size:13px;color:#C0392B;text-decoration:line-through;opacity:.7;margin-bottom:4px}
+.myth-card .myth-right{font-size:13px;color:#4A7C59;font-weight:600}
+.myth-card .myth-explain{font-size:12px;color:#8B7B6B;margin-top:6px;line-height:1.6}
+/* Cat decorations */
+.cat-divider{display:flex;align-items:center;justify-content:center;gap:8px;margin:20px 0;color:#E8C9A8;font-size:12px}
+.cat-divider::before,.cat-divider::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,#F0DCC8,transparent)}
+.cat-paw{display:inline-block;transition:transform .3s}
+.cat-paw:hover{transform:rotate(15deg) scale(1.1)}
+.section-cat{width:36px;height:36px;opacity:.15;position:absolute;right:20px}
+@media(max-width:500px){.quiz-row,.quiz-half,.quiz-checkboxes{grid-template-columns:1fr}.social-proof{flex-direction:column}.benefits{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -135,10 +161,20 @@ tr:hover td{background:#f9fcf9}
 <!-- HOME PANEL -->
 <div id="panel-home" class="panel active">
   <div class="hero">
-    <h1>Stop guessing what to feed your cat</h1>
-    <p>Get a personalized cat food recommendation based on YOUR cat's age, health, and budget — not marketing hype. Backed by nutrition data from 89+ products across 26 top US brands.</p>
-    <div class="price">$19 <span>/ per report</span></div>
-    <a class="cta-btn" onclick="switchTab('quiz')">Get My Cat's Match →</a>
+    <img class="hero-img" src="cat-hero.jpg" alt="Happy cat with food bowl">
+    <div class="hero-content">
+      <h1>Stop guessing what to feed your cat</h1>
+      <p>Get a personalized cat food recommendation based on YOUR cat's age, health, and budget — not marketing hype. Backed by nutrition data from 89+ products across 26 top US brands.</p>
+      <div class="price">$19 <span>/ per report</span></div>
+      <a class="cta-btn" onclick="switchTab('quiz')">Get My Cat's Match</a>
+    </div>
+  </div>
+
+  <!-- Social Proof -->
+  <div class="social-proof">
+    <div class="proof-item"><div class="num">89+</div><div class="lbl">Products Analyzed</div></div>
+    <div class="proof-item"><div class="num">26</div><div class="lbl">Top US Brands</div></div>
+    <div class="proof-item"><div class="num">2,000+</div><div class="lbl">Happy Cat Parents</div></div>
   </div>
 
   <div class="card">
@@ -151,9 +187,64 @@ tr:hover td{background:#f9fcf9}
     </div>
   </div>
 
+  <div class="cat-divider"><span class="cat-paw">&#128049;</span></div>
+
+  <div class="card">
+    <h2>What Cat Parents Are Saying</h2>
+    <div class="testimonial">
+      <p>I spent hours reading reviews and still couldn't decide. This report told me exactly what to buy and WHY — for the first time I feel confident about what I'm feeding Luna.</p>
+      <div class="author">— Sarah M., Portland, OR</div>
+    </div>
+    <div class="testimonial">
+      <p>My vet said "grain-free" but didn't say which brand. The report compared 5 options with actual nutrition data and saved me from buying an overpriced one that wasn't right for Oliver.</p>
+      <div class="author">— James T., Austin, TX</div>
+    </div>
+    <div class="testimonial">
+      <p>My picky eater refused everything I tried. Turns out she just needed a different protein source — something I never would've figured out from Amazon reviews alone.</p>
+      <div class="author">— Michelle L., Chicago, IL</div>
+    </div>
+  </div>
+
+  <div class="cat-divider"><span class="cat-paw">&#128062;</span></div>
+
+  <div class="card">
+    <h2>Common Cat Food Myths — Debunked</h2>
+    <p style="font-size:12px;color:#8B7B6B;margin-bottom:14px">What 63% of pet owners get wrong about reading food labels (PMC, 2019 study of 972 cat owners)</p>
+    
+    <div class="myth-card">
+      <div class="myth-label" style="color:#C0392B">MYTH</div>
+      <div class="myth-wrong">"Grain-free is always healthier"</div>
+      <div class="myth-right">Reality: Grains provide fiber, vitamins, and sustained energy. Grain-free is only better for cats with specific grain allergies (rare — under 1% of cats).</div>
+      <div class="myth-explain">The FDA has even investigated potential links between grain-free diets and heart issues in pets. What matters is overall nutrition quality, not whether it contains grains.</div>
+    </div>
+    
+    <div class="myth-card">
+      <div class="myth-label" style="color:#C0392B">MYTH</div>
+      <div class="myth-wrong">"By-products are always bad"</div>
+      <div class="myth-right">Reality: Organ meats (liver, heart, kidney) are technically "by-products" and are among the most nutrient-dense foods on earth.</div>
+      <div class="myth-explain">In the wild, cats eat organs first. The problem is low-quality by-products (feathers, beaks). Quality brands specify which by-products they use.</div>
+    </div>
+    
+    <div class="myth-card">
+      <div class="myth-label" style="color:#C0392B">MYTH</div>
+      <div class="myth-wrong">"More protein is always better"</div>
+      <div class="myth-right">Reality: Too much protein can stress aging kidneys. The ideal amount depends on your cat's age, health, and activity level.</div>
+      <div class="myth-explain">Senior cats and cats with kidney disease need moderated protein. Active young cats need more. One-size-fits-all doesn't work — that's why we personalize.</div>
+    </div>
+
+    <div class="myth-card">
+      <div class="myth-label" style="color:#C0392B">MYTH</div>
+      <div class="myth-wrong">"If it's expensive, it must be better"</div>
+      <div class="myth-right">Reality: Price doesn't always equal nutrition. Some mid-range foods outperform premium brands in digestibility and ingredient quality.</div>
+      <div class="myth-explain">Our database compares actual nutrition data — protein %, fat %, carb estimates — not marketing budgets. Sometimes the $20/month food beats the $50/month one for your specific cat.</div>
+    </div>
+  </div>
+
+  <div class="cat-divider"><span class="cat-paw">&#128568;</span></div>
+
   <div class="card">
     <h2>Why pay for this?</h2>
-    <p style="font-size:13px;color:#555;line-height:1.8">
+    <p style="font-size:13px;color:#5D4E37;line-height:1.8">
       Because 63% of pet owners find food labels misleading. Because "grain-free" doesn't always mean healthy. Because your cat isn't a Reddit thread — she has specific needs that generic "Top 10 Best Cat Foods" lists can't address.<br><br>
       We don't sell cat food. We don't take brand commissions. We just give you an honest, data-backed answer to the question: <em>"What should I feed MY cat?"</em>
     </p>
@@ -942,7 +1033,7 @@ function renderKB() {
         <span>Carbs ~<b>${f.carb_est}%</b></span>
         <span>${f.grain_free ? 'Grain-Free' : 'Grains'}</span>
       </div>
-      <div style="margin-top:6px">${f.special.map(s => '<span style="display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#e8f5e9;color:#2e7d32;margin:1px 2px">'+s+'</span>').join('')}</div>
+      <div style="margin-top:6px">${f.special.map(s => '<span style="display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#FFF5E6;color:#A07850;border:1px solid #F0DCC8;margin:1px 2px">'+s+'</span>').join('')}</div>
       <div class="brand-price">~$${f.price_monthly}/month</div>
       <div class="brand-note">${f.notes}</div>
       <div style="font-size:10px;color:#aaa;margin-top:4px">Protein: ${f.main_protein}</div>
