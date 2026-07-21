@@ -869,6 +869,7 @@ function processPayment() {
   Paddle.Checkout.open({
     items: [{priceId: priceId, quantity: 1}],
     customer: {email: currentOrder.email},
+    customData: {orderId: currentOrder.orderId},
     settings: {
       displayMode: 'overlay',
       theme: 'light',
