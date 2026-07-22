@@ -900,7 +900,17 @@ function handlePaddleSuccess() {
         <p style="font-size:13px">Cat: ${currentOrder.catName} · Amount: $${tierAmount} · Status: Paid</p>
       </div>
     </div>
-    
+
+    <!-- WHAT HAPPENS NEXT -->
+    <div class="card" style="margin-top:16px;background:#FFF5E6;border-color:#C4956A">
+      <h3 style="color:#A07850;margin-bottom:10px">📋 What Happens Next</h3>
+      <div style="font-size:13px;line-height:1.8;color:#5D4E37">
+        <p><strong>Within 24 hours:</strong> You'll receive your personalized <strong>${tierLabel} Report</strong> at <strong>${currentOrder.email}</strong> with top 3 food picks, transition guide, and feeding tips for ${currentOrder.catName}.</p>
+        <p style="margin-top:8px"><strong>Day 3:</strong> We'll send a quick follow-up email to check how ${currentOrder.catName} is doing with the new food. Your feedback helps us improve!</p>
+        <p style="margin-top:8px"><strong>Anytime:</strong> Questions after receiving your report? Just reply to our email — we read every message.</p>
+      </div>
+    </div>
+
     <!-- FEEDBACK FORM -->
     <div class="card" style="margin-top:20px" id="feedbackCard">
       <div class="feedback-hero">
@@ -1037,6 +1047,10 @@ function renderKB() {
       <div class="brand-price">~$${f.price_monthly}/month</div>
       <div class="brand-note">${f.notes}</div>
       <div style="font-size:10px;color:#aaa;margin-top:4px">Protein: ${f.main_protein}</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <a href="https://www.amazon.com/s?k=${encodeURIComponent(f.brand+' '+f.name+' cat food')}" target="_blank" rel="nofollow noopener" style="flex:1;text-align:center;padding:6px 0;font-size:11px;font-weight:600;color:#fff;background:#FF9900;border-radius:8px;text-decoration:none">Buy on Amazon</a>
+        <a href="https://www.chewy.com/s?searchTerm=${encodeURIComponent(f.brand+' '+f.name)}" target="_blank" rel="nofollow noopener" style="flex:1;text-align:center;padding:6px 0;font-size:11px;font-weight:600;color:#fff;background:#0077C8;border-radius:8px;text-decoration:none">Buy on Chewy</a>
+      </div>
     </div>
   `).join('');
   
