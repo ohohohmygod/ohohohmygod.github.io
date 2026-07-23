@@ -835,7 +835,39 @@ function submitQuiz() {
     status: 'unpaid',
     createdAt: new Date().toISOString()
   };
-  
+
+  // Send quiz data to owner's email via FormSubmit
+  fetch('https://formsubmit.co/ajax/35928175@qq.com', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      _subject: '🐱 New Order: ' + orderId + ' - ' + catName,
+      'Order ID': orderId,
+      'Customer Email': quizEmail,
+      'Tier': selectedTier === 'pro' ? 'Pro ($29)' : 'Basic ($19)',
+      'Cat Name': catName,
+      'Cat Age': catAge,
+      'Cat Weight': currentOrder.catWeight || 'N/A',
+      'Body Condition': currentOrder.bodyCondition,
+      'Breed': currentOrder.catBreed || 'N/A',
+      'Lifestyle': currentOrder.catLifestyle || 'N/A',
+      'Reason for New Food': currentOrder.reasonForNew || 'N/A',
+      'Symptoms': symptoms.join(', ') || 'None',
+      'Conditions': conditions.join(', ') || 'None',
+      'Special Diet': specialDiet.join(', ') || 'None',
+      'Current Brand': currentOrder.currentBrand || 'N/A',
+      'Current Product': currentOrder.currentProduct || 'N/A',
+      'What Not Working': notWorking.join(', ') || 'N/A',
+      'Foods Tried': currentOrder.foodsTried || 'N/A',
+      'Foods Tried Result': currentOrder.foodsTriedResult || 'N/A',
+      'Food Type Preference': currentOrder.foodTypePref || 'N/A',
+      'Budget': currentOrder.budget || 'N/A',
+      'Ingredient Philosophy': currentOrder.ingredientPhilosophy || 'N/A',
+      'Shop Where': shopWhere.join(', ') || 'N/A',
+      'Submitted At': new Date().toISOString()
+    })
+  }).catch(e => console.warn('FormSubmit failed:', e));
+
   // Show payment panel
   document.getElementById('orderIdDisplay').textContent = orderId;
   document.getElementById('payBtn').textContent = 'Pay $' + currentOrder.amount + ' with Card →';
