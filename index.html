@@ -863,9 +863,12 @@ function processPayment() {
   const btn = document.getElementById('payBtn');
   btn.disabled = true;
   btn.textContent = 'Redirecting to secure checkout...';
-  
+
+  // Save currentOrder to localStorage so it survives page reload
+  localStorage.setItem('cfm_pending_order', JSON.stringify(currentOrder));
+
   const priceId = PADDLE_PRICES[currentOrder.tier];
-  
+
   Paddle.Checkout.open({
     items: [{priceId: priceId, quantity: 1}],
     customer: {email: currentOrder.email},
@@ -878,6 +881,13 @@ function processPayment() {
     }
   });
 }
+
+// Listen for hash changes (Paddle may change hash without full reload)
+window.addEventListener('hashchange', () => {
+  if (window.location.hash === '#paid') {
+    checkPaymentReturn();
+  }
+});
 
 // Handle Paddle checkout completion
 function handlePaddleSuccess() {
@@ -957,8 +967,21 @@ function handlePaddleSuccess() {
 
 // Check URL hash for post-payment return
 function checkPaymentReturn() {
-  if (window.location.hash === '#paid' && currentOrder) {
-    handlePaddleSuccess();
+  if (window.location.hash === '#paid') {
+    // Restore currentOrder from localStorage if page was reloaded
+    if (!currentOrder) {
+      const saved = localStorage.getItem('cfm_pending_order');
+      if (saved) {
+        currentOrder = JSON.parse(saved);
+        localStorage.removeItem('cfm_pending_order');
+      }
+    }
+    if (currentOrder) {
+      // Switch to payment panel before updating content
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-payment').classList.add('active');
+      handlePaddleSuccess();
+    }
   }
 }
 
